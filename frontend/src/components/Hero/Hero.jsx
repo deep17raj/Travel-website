@@ -1,80 +1,95 @@
 import React from "react";
-import compass from "../../assets/compass.svg";
-import Pic1 from "../../assets/pic1.svg";
-import Pic2 from "../../assets/pic2.svg";
-import Pic3 from "../../assets/pic3.svg";
-import Pic4 from "../../assets/pic4.svg";
+// Ensure these paths match your project structure
+import Pic1 from "../../assets/Pic1.svg";
+import Pic2 from "../../assets/Pic2.svg";
+import Pic3 from "../../assets/Pic3.svg";
+import Pic4 from "../../assets/Pic4.svg";
+import Tel from "../../assets/Tel.svg";
+import Map from "../../assets/Maps.svg";
+import Plane1 from "../../assets/Plane1.svg";
+import Plane2 from "../../assets/Plane2.svg";
+
 function Hero() {
-    return (
-        <div className="mt-16 bg-gray-300 ">
-            <div className="hero flex max-w-3/4 mx-auto justify-between">
-                <div className="left flex flex-col w-[40%] justify-center  gap-6">
-                    <div className="leftEl rounded-2xl border-2 border-[#ffffff] bg-[#ffffff]">
-                        <div className="flex gap-4 justify-center items-center">
-                            <p className="text-[#317312] text-[14px] shadow-lg shadow-[#8C8C8C1A]">
-                                Your Most Reliable Travel Partner with Government-Certified
-                                Guides
-                            </p>
-                            {/* <div>
-                                <img src={compass} alt="" />
-                            </div> */}
-                        </div>
-                    </div>
-                    <div className="leftEl flex flex-col">
-                        <div>
-                            <p className="text-[#1C1C1C] font-bold text-[64px]">Travel with</p>
-                        </div>
-                        <div>
-                            <p className="text-[#317312] font-bold text-[64px]">Complete Trust</p>
-                        </div>
-                    </div>
-                    <div className="leftEl">
-                        <p className=" text-[16px] font-thin">
-                            Experience the UAE with certified, trustworthy guides. Pay
-                            directly to us, travel worry free. Your safety and satisfaction
-                            are our guarantee.
-                        </p>
-                    </div>
-                    <div className="leftEl bg-[#166EF3] rounded-4xl flex flex-col justify-center items-start w-fit p-4">
-                        <button className="text-[#ffffff]">Contact Now</button>
-                    </div>
-                </div>
-                <div className="grid grid-cols-2 grid-rows-6 gap-4 h-[480px]">
-                    {/* Pic1: Left 3 rows */}
-                    <div className="col-start-1 row-start-1 row-span-3">
-                        <img
-                            src={Pic1}
-                            className="w-full h-full object-cover rounded-3xl"
-                        />
-                    </div>
+  return (
+    <div className="w-full mt-8 mb-20">
+      {/* Main Container:
+         - w-[90%] on mobile (so it doesn't touch edges)
+         - w-3/4 on large screens (as requested)
+         - mx-auto centers it
+      */}
+      <div className="w-[90%] lg:w-3/4 mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-4 relative">
+        
+        {/* --- LEFT TEXT SECTION --- */}
+        <div className="w-full lg:w-[45%] flex flex-col items-start gap-6 z-10">
+          
+          {/* Trust Badge */}
+          <div className="bg-white rounded-full px-5 py-2.5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <p className="text-[#317312] text-xs sm:text-sm font-bold tracking-wide">
+              Your Most Reliable Travel Partner
+            </p>
+          </div>
 
-                    {/* Pic3: Right 2 rows */}
-                    <div className="col-start-2 row-start-1 row-span-2">
-                        <img
-                            src={Pic3}
-                            className="w-full h-full object-cover rounded-3xl"
-                        />
-                    </div>
+          {/* Headline */}
+          <div className="flex flex-col leading-[1.1]">
+            <h1 className="text-[#1C1C1C] font-extrabold text-5xl sm:text-6xl lg:text-[4.5rem] tracking-tight">
+              Travel with
+            </h1>
+            <h1 className="text-[#317312] font-extrabold text-5xl sm:text-6xl lg:text-[4.5rem] tracking-tight">
+              Complete Trust
+            </h1>
+          </div>
 
-                    {/* Pic4: Right rows 3–5 */}
-                    <div className="col-start-2 row-start-3 row-span-3">
-                        <img
-                            src={Pic4}
-                            className="w-full h-full object-cover rounded-3xl"
-                        />
-                    </div>
+          {/* Description */}
+          <p className="text-gray-500 text-base sm:text-lg leading-relaxed max-w-md">
+            Experience the UAE with certified, trustworthy guides. Pay directly to us, 
+            travel worry free. Your safety and satisfaction are our guarantee.
+          </p>
 
-                    {/* Pic2: Left rows 4–6 */}
-                    <div className="col-start-1 row-start-4 row-span-3">
-                        <img
-                            src={Pic2}
-                            className="w-full h-full object-cover rounded-3xl"
-                        />
-                    </div>
-                </div>
-            </div>
+          {/* CTA Button */}
+          <button className="bg-[#166EF3] hover:bg-blue-700 transition-all text-white font-semibold rounded-full px-8 py-3.5 shadow-lg shadow-blue-200 mt-2">
+            Contact Now
+          </button>
         </div>
-    );
+
+        {/* --- RIGHT IMAGE GRID SECTION --- */}
+        <div className="w-full lg:w-[50%] relative mt-10 lg:mt-0">
+          
+          {/* Decorative Background Elements */}
+          <img src={Plane2} alt="" className="absolute -top-10 -left-10 w-40 opacity-60 hidden lg:block pointer-events-none" />
+          <img src={Plane1} alt="" className="absolute bottom-10 -right-10 w-32 opacity-60 hidden lg:block pointer-events-none" />
+          <img src={Tel} alt="" className="absolute -top-6 right-20 w-12 z-20 animate-bounce delay-700 hidden lg:block" />
+          <img src={Map} alt="" className="absolute bottom-8 left-8 w-12 z-20 hidden lg:block" />
+
+          {/* Masonry Grid Layout */}
+          <div className="grid grid-cols-2 gap-4">
+             
+             {/* Column 1 (Offset down) */}
+             <div className="flex flex-col gap-4 mt-8 lg:mt-12">
+                <div className="w-full h-48 sm:h-56 rounded-[2rem] overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform">
+                   <img src={Pic1} alt="Scenic 1" className="w-full h-full object-cover" />
+                </div>
+                <div className="w-full h-40 sm:h-44 rounded-[2rem] overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform">
+                   <img src={Pic2} alt="Scenic 2" className="w-full h-full object-cover" />
+                </div>
+             </div>
+
+             {/* Column 2 (Offset up) */}
+             <div className="flex flex-col gap-4 -mt-4 lg:-mt-0">
+                <div className="w-full h-40 sm:h-44 rounded-[2rem] overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform">
+                   <img src={Pic3} alt="Scenic 3" className="w-full h-full object-cover" />
+                </div>
+                <div className="w-full h-56 sm:h-64 rounded-[2rem] overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform">
+                   <img src={Pic4} alt="Scenic 4" className="w-full h-full object-cover" />
+                </div>
+             </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 }
 
 export default Hero;
