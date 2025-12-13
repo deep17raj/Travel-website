@@ -48,7 +48,7 @@ function App() {
       {/* --- YOUR MAIN CONTENT --- */}
       <div className="relative z-0">
          <div className=''>
-          {/* <NavBar/>
+          <NavBar/>
           <Hero/>
           <Reveal>
             <Features/>
@@ -63,8 +63,7 @@ function App() {
           <MainAboutUs/>
           <Blog/>
           <GuideForm/>
-          <SeeAll/> */}
-          <NewGuide/>
+          <SeeAll/>
           <DashLayout/>
         </div>
       </div>

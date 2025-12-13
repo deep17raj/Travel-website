@@ -4,6 +4,7 @@ import CustomerSection from '../CustomerSection/CustomerSection';
 import NewGuide from '../NewGuide/NewGuide';
 import AddPackageForm from '../Packagess/AddPackageForm';
 import ViewAllPackages from '../ViewAllPackages/ViewAllPackages';
+import ManageGuide from '../ManageGuide/ManageGuide';
 
 // A simple sidebar item component
 const SidebarItem = ({ title, isActive, onClick }) => (
@@ -36,6 +37,8 @@ const DashLayout = () => {
         return <AddPackageForm/>;
       case 'View All Package':
         return <ViewAllPackages/>;
+      case 'Manage Guide':
+        return <ManageGuide/>;
       // Placeholder for other sections
       default:
         return <div className="p-12 text-3xl font-bold text-gray-400 flex h-full items-center justify-center">{activeSection} Section Coming Soon</div>;
