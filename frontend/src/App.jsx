@@ -12,6 +12,7 @@ function App() {
 
   return (
     <>
+    <BrowserRouter>
     <div className="relative w-full min-h-screen overflow-x-hidden">
       
       {/* --- BACKGROUND GRADIENT BLOBS --- */}
@@ -37,18 +38,18 @@ function App() {
 
       {/* --- YOUR MAIN CONTENT --- */}
       <div className="relative z-0">
-         <div className=''>
-          <HomePage/>
-          <MainAboutUs/>
-          <Blog/>
-          <GuideForm/>
-          <SeeAll/>
-          <DashLayout/>
-        </div>
+         <Routes>
+          <Route path='/' element={<HomePage/>}/>
+          <Route path='/about' element={<MainAboutUs/>}/>
+          <Route path='/packages' element={<SeeAll/>}/>
+          <Route path='/requestGuide' element={<GuideForm/>}/>
+          {/* <Blog/>
+          <DashLayout/> */}
+        </Routes>
       </div>
 
     </div>
-      
+      </BrowserRouter>
     </>
   )
 }

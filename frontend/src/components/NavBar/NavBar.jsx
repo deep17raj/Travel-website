@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TG from "../../assets/TourGuide.svg"; // Ensure this path is correct
+import { Link } from 'react-router-dom'
 
 function NavBar() {
     const [open, setOpen] = useState(false);
@@ -68,7 +69,9 @@ function NavBar() {
                             {item}
                         </button>
                     ))}
-                    <button className="bg-[#166EF3] text-white rounded-full p-3 flex justify-center items-center gap-2 mt-2">
+                    <button onClick={()=>{
+
+                    }} className="bg-[#166EF3] text-white rounded-full p-3 flex justify-center items-center gap-2 mt-2">
                          <img src={TG} alt="" className="w-5 h-5 brightness-0 invert" />
                         <span>Become Guide</span>
                     </button>
