@@ -1,22 +1,12 @@
 import { useState } from 'react'
-import NavBar from './components/NavBar/NavBar'
-import Hero from './components/Hero/Hero'
-import Features from './components/Features/Features'
-import TrustTravel from './components/TrustTravel/TrustTravel'
-import Tp from './components/TP/Tp'
-import KeyFeature from './components/KeyFeature/KeyFeature'
-import TestimonialText from './components/TestimonialText/TestimonialText'
-import TestimonialVideo from './components/TestimonialVideo/TestimonialVideo'
-import AboutUs from './components/AboutUs/AboutUs'
-import Destination from './components/Destination/Destination'
 import MainAboutUs from './components/MainAboutUs/MainAboutUs'
 import Blog from './components/Blog/Blog'
 import GuideForm from './components/GuideForm/GuideForm.jsx'
-import FeatureCard from './components/Sample/Sample.jsx'
 import SeeAll from './components/SeeAll/SeeAll.jsx'
-import Reveal from './components/Reveal/Reveal.jsx'
 import NewGuide from './components/DashBoard/NewGuide/NewGuide.jsx'
 import DashLayout from './components/DashBoard/DashLayout/DashLayout.jsx'
+import HomePage from './components/HomePage/HomePage.jsx'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 function App() {
 
@@ -48,18 +38,7 @@ function App() {
       {/* --- YOUR MAIN CONTENT --- */}
       <div className="relative z-0">
          <div className=''>
-          <NavBar/>
-          <Hero/>
-          <Reveal>
-            <Features/>
-          </Reveal>
-          <Reveal><Destination/></Reveal>
-          <Reveal><TrustTravel/></Reveal>
-          <Reveal><Tp/></Reveal>
-          <Reveal><KeyFeature/></Reveal>
-          <Reveal><TestimonialText/></Reveal>
-          <Reveal><TestimonialVideo/></Reveal>
-          <Reveal><AboutUs/></Reveal>
+          <HomePage/>
           <MainAboutUs/>
           <Blog/>
           <GuideForm/>

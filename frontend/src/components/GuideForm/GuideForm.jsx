@@ -7,13 +7,17 @@ import Ecp1 from "../../assets/Form/Ecp1.svg";
 import Ecp2 from "../../assets/Form/Ecp2.svg";
 import Ecp3 from "../../assets/Form/Ecp3.svg";
 
-function GuideForm({ isOpen, onClose }) {
+function GuideForm({ isOpen, onClose = () => {} }) {
+  // 1. State keys matching Mongoose schema
   const [form, setForm] = useState({
-    name: "",
-    mobile: "",
-    email: "",
-    exp: "",
+    guideName: "",
+    guidePhoneNo: "",
+    guidePhoneNo2: "", // Optional Field
+    guideEmail: "",
+    guideAddress: "",
+    guideExperience: "",
   });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,10 +31,29 @@ function GuideForm({ isOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const expInt = parseInt(form.exp, 10) || 0;
+    const expInt = parseInt(form.guideExperience, 10) || 0;
 
-    if (!form.name.trim() || !form.mobile.trim() || !form.email.trim() || expInt <= 0) {
-      setError("Please fill all fields correctly. Experience must be > 0.");
+    // 2. Validation Logic
+    if (
+      !form.guideName.trim() ||
+      !form.guidePhoneNo.trim() ||
+      !form.guideEmail.trim() ||
+      !form.guideAddress.trim() ||
+      expInt <= 0
+    ) {
+      setError("Please fill all required fields correctly. Experience must be > 0.");
+      return;
+    }
+
+    // Primary phone check
+    if (form.guidePhoneNo.length !== 10) {
+      setError("Primary Phone Number must be exactly 10 digits.");
+      return;
+    }
+
+    // Secondary phone check (Only if user typed something)
+    if (form.guidePhoneNo2.trim() && form.guidePhoneNo2.length !== 10) {
+      setError("Secondary Phone Number must be exactly 10 digits.");
       return;
     }
 
@@ -38,18 +61,33 @@ function GuideForm({ isOpen, onClose }) {
     setLoading(true);
 
     try {
-      const payload = { ...form, exp: expInt };
-      // await axios.post("http://localhost:5000/api/form", payload);
-      
-      // Simulate success for demo
+      // 3. Create Payload & Remove Optional Key if Empty
+      const payload = { ...form, guideExperience: expInt };
+
+      // Check if guidePhoneNo2 is empty/whitespace. If so, delete the key.
+      if (!payload.guidePhoneNo2 || payload.guidePhoneNo2.trim() === "") {
+        delete payload.guidePhoneNo2;
+      }
+
+      console.log("Sending Payload:", payload);
+
+      await axios.post("http://localhost:3000/api/v1/save/request/new/guide", payload);
+
+      // Simulate success
       setTimeout(() => {
-        console.log("Submitted:", payload);
-        setForm({ name: "", mobile: "", email: "", exp: "" });
+        // Reset form
+        setForm({
+          guideName: "",
+          guidePhoneNo: "",
+          guidePhoneNo2: "",
+          guideEmail: "",
+          guideAddress: "",
+          guideExperience: "",
+        });
         setLoading(false);
         // Close modal on success
-        onClose(); 
+        onClose();
       }, 1000);
-
     } catch (err) {
       console.error(err);
       setError("Failed to submit. Try again.");
@@ -58,15 +96,14 @@ function GuideForm({ isOpen, onClose }) {
   };
 
   return (
-    // OVERLAY: Covers the whole screen
+    // OVERLAY
     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       
       {/* MODAL CONTAINER */}
-      {/* max-h-[90vh] ensures it fits on small vertical screens (landscape mobile) */}
       <div className="relative w-full max-w-lg bg-[#fff7fd] shadow-2xl rounded-4xl overflow-hidden flex flex-col max-h-[90vh] overflow-y-auto">
         
         {/* CLOSE BUTTON */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 z-[60] text-gray-500 hover:text-[#F411CF] transition-colors p-2 bg-white/50 rounded-full"
         >
@@ -75,8 +112,7 @@ function GuideForm({ isOpen, onClose }) {
           </svg>
         </button>
 
-        {/* --- DECORATIVE IMAGES (Absolute) --- */}
-        {/* Hidden on very small screens (xs) to prevent overlap with text */}
+        {/* --- DECORATIVE IMAGES --- */}
         <div className="absolute -top-2 left-0 pointer-events-none">
           <img src={Ecp1} alt="" className="w-16 md:w-auto" />
         </div>
@@ -86,7 +122,6 @@ function GuideForm({ isOpen, onClose }) {
         <div className="absolute bottom-0 right-0 pointer-events-none">
           <img src={Ecp3} alt="" className="w-20 md:w-auto" />
         </div>
-        {/* Map & Plane: Adjusted z-index to be behind inputs (z-0) but visible */}
         <div className="absolute top-12 right-12 opacity-50 md:opacity-100 pointer-events-none z-0">
           <img src={Map} alt="" className="w-24 md:w-auto" />
         </div>
@@ -103,40 +138,66 @@ function GuideForm({ isOpen, onClose }) {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {error && <p className="text-red-600 text-sm text-center">{error}</p>}
 
+            {/* Guide Name */}
             <input
               className="border border-gray-300 p-3 rounded-2xl placeholder-gray-500 text-black focus:outline-none focus:border-[#F411CF] transition-colors bg-white/80"
               type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
+              name="guideName"
+              placeholder="Name *"
+              value={form.guideName}
               onChange={handleChange}
             />
 
+            {/* Primary Phone */}
             <input
               className="border border-gray-300 p-3 rounded-2xl placeholder-gray-500 text-black focus:outline-none focus:border-[#F411CF] transition-colors bg-white/80"
               type="tel"
-              name="mobile"
-              placeholder="Mobile Number"
-              value={form.mobile}
+              name="guidePhoneNo"
+              placeholder="Mobile Number *"
+              maxLength={10}
+              value={form.guidePhoneNo}
               onChange={handleChange}
             />
 
+            {/* Secondary Phone (Optional) */}
+            <input
+              className="border border-gray-300 p-3 rounded-2xl placeholder-gray-500 text-black focus:outline-none focus:border-[#F411CF] transition-colors bg-white/80"
+              type="tel"
+              name="guidePhoneNo2"
+              placeholder="Secondary Mobile Number (Optional)"
+              maxLength={10}
+              value={form.guidePhoneNo2}
+              onChange={handleChange}
+            />
+
+            {/* Email */}
             <input
               className="border border-gray-300 p-3 rounded-2xl placeholder-gray-500 text-black focus:outline-none focus:border-[#F411CF] transition-colors bg-white/80"
               type="email"
-              name="email"
-              placeholder="Email"
-              value={form.email}
+              name="guideEmail"
+              placeholder="Email *"
+              value={form.guideEmail}
               onChange={handleChange}
             />
 
+            {/* Address */}
+            <input
+              className="border border-gray-300 p-3 rounded-2xl placeholder-gray-500 text-black focus:outline-none focus:border-[#F411CF] transition-colors bg-white/80"
+              type="text"
+              name="guideAddress"
+              placeholder="Address *"
+              value={form.guideAddress}
+              onChange={handleChange}
+            />
+
+            {/* Experience */}
             <input
               className="border border-gray-300 p-3 rounded-2xl placeholder-gray-500 text-black focus:outline-none focus:border-[#F411CF] transition-colors bg-white/80"
               type="number"
-              name="exp"
+              name="guideExperience"
               min={1}
-              placeholder="Years of experience"
-              value={form.exp}
+              placeholder="Years of experience *"
+              value={form.guideExperience}
               onChange={handleChange}
             />
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Phone } from "lucide-react"; // Using lucide-react for the phone icon for better scaling
+import { Phone } from "lucide-react"; 
 
 // Ensure these paths match your project structure
 import Pic1 from "../../assets/BlogPic.svg";
@@ -11,13 +11,14 @@ import Ecp2 from "../../assets/Form/Ecp2.svg";
 import Ecp3 from "../../assets/Form/Ecp3.svg";
 
 function Blog() {
+  // 1. Updated state keys to match Mongoose Schema
   const [form, setForm] = useState({
-    name: "",
-    mobile: "",
-    email: "",
-    destination: "",
-    date: "",
-    persons: "",
+    customerName: "",
+    customerPhoneNo: "",
+    customerEmail: "",
+    travelDestination: "",
+    travelDate: "",
+    totalNoOfPersons: "",
   });
 
   const [error, setError] = useState("");
@@ -31,14 +32,15 @@ function Blog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const personsInt = parseInt(form.persons, 10) || 0;
+    const personsInt = parseInt(form.totalNoOfPersons, 10) || 0;
 
+    // 2. Updated Validation Logic
     if (
-      !form.name.trim() ||
-      !form.mobile.trim() ||
-      !form.email.trim() ||
-      !form.destination.trim() ||
-      !form.date ||
+      !form.customerName.trim() ||
+      !form.customerPhoneNo.trim() ||
+      !form.customerEmail.trim() ||
+      !form.travelDestination.trim() ||
+      !form.travelDate ||
       personsInt <= 0
     ) {
       setError("Please fill all fields correctly.");
@@ -46,22 +48,33 @@ function Blog() {
       return;
     }
 
+    // Phone length validation (Schema requires min/max 10)
+    if (form.customerPhoneNo.length !== 10) {
+        setError("Phone number must be exactly 10 digits.");
+        setSuccess("");
+        return;
+    }
+
     setError("");
     setLoading(true);
 
     try {
-      const payload = { ...form, persons: personsInt };
+      // 3. Payload matching schema types
+      const payload = { ...form, totalNoOfPersons: personsInt };
+      
+      console.log("Sending Payload:", payload);
+      
       // Replace with your actual API endpoint
-      const res = await axios.post("http://localhost:5000/api/form", payload);
-      console.log("Sent to backend:", res.data);
+      const res = await axios.post("http://localhost:3000/api/v1/save/customer/details", payload);
+      console.log("Response:", res.data);
 
       setForm({
-        name: "",
-        mobile: "",
-        email: "",
-        destination: "",
-        date: "",
-        persons: "",
+        customerName: "",
+        customerPhoneNo: "",
+        customerEmail: "",
+        travelDestination: "",
+        travelDate: "",
+        totalNoOfPersons: "",
       });
       setSuccess("Request sent successfully!");
     } catch (err) {
@@ -74,7 +87,7 @@ function Blog() {
   };
 
   return (
-    <section className="w-full  pb-20 pt-4">
+    <section className="w-full pb-20 pt-4">
       
       {/* --- HERO IMAGE SECTION --- */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -154,57 +167,65 @@ function Blog() {
                   {error && <div className="text-red-500 text-center text-sm bg-red-50 p-2 rounded-lg">{error}</div>}
                   {success && <div className="text-green-600 text-center text-sm bg-green-50 p-2 rounded-lg">{success}</div>}
 
+                  {/* Customer Name */}
                   <input
                     className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
                     type="text"
-                    name="name"
+                    name="customerName"
                     placeholder="Name"
-                    value={form.name}
+                    value={form.customerName}
                     onChange={handleChange}
                   />
 
+                  {/* Customer Phone */}
                   <input
                     className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
                     type="tel"
-                    name="mobile"
-                    placeholder="Mobile Number"
-                    value={form.mobile}
+                    name="customerPhoneNo"
+                    placeholder="Mobile Number (10 digits)"
+                    maxLength={10}
+                    value={form.customerPhoneNo}
                     onChange={handleChange}
                   />
 
+                  {/* Customer Email */}
                   <input
                     className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
                     type="email"
-                    name="email"
+                    name="customerEmail"
                     placeholder="Email"
-                    value={form.email}
+                    value={form.customerEmail}
                     onChange={handleChange}
                   />
 
+                  {/* Travel Destination */}
                   <input
                     className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
                     type="text"
-                    name="destination"
+                    name="travelDestination"
                     placeholder="Destination"
-                    value={form.destination}
+                    value={form.travelDestination}
                     onChange={handleChange}
                   />
 
                   <div className="flex flex-col sm:flex-row gap-4">
+                    {/* Travel Date */}
                     <input
                       className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
                       type="date"
-                      name="date"
-                      value={form.date}
+                      name="travelDate"
+                      value={form.travelDate}
                       onChange={handleChange}
                     />
+                    
+                    {/* Total Persons */}
                     <input
                       className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
                       type="number"
-                      name="persons"
+                      name="totalNoOfPersons"
                       min="1"
                       placeholder="Persons"
-                      value={form.persons}
+                      value={form.totalNoOfPersons}
                       onChange={handleChange}
                     />
                   </div>

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import axios from "axios"; // 1. Import Axios
+import axios from "axios";
 
 const NewGuide = () => {
-    // State for form data
+    // 1. Updated state keys to match Mongoose Schema
     const [formData, setFormData] = useState({
         guideName: "",
         guideId: "",
-        primaryPhone: "",
-        secondaryPhone: "",
-        experience: "",
-        address: "",
+        guideEmail: "",        // Added Email Field
+        guidePhoneNo: "",      
+        guidePhoneNo2: "",     
+        guideExperience: "",   
+        guideAddress: "",      
     });
 
     // State for validation errors and submission status
@@ -37,37 +38,48 @@ const NewGuide = () => {
     const validateForm = () => {
         let newErrors = {};
         const phoneRegex = /^\d{10}$/;
+        // Simple email regex for validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!formData.guideName.trim())
-            newErrors.guideName = "Guide Name is required";
+        if (!formData.guideName.trim()) newErrors.guideName = "Guide Name is required";
         if (!formData.guideId.trim()) newErrors.guideId = "Guide Id is required";
 
-        if (!formData.primaryPhone.trim()) {
-            newErrors.primaryPhone = "Primary phone no is required";
-        } else if (!phoneRegex.test(formData.primaryPhone)) {
-            newErrors.primaryPhone = "Enter a valid 10-digit phone number";
+        // Validate Email
+        if (!formData.guideEmail.trim()) {
+            newErrors.guideEmail = "Email is required";
+        } else if (!emailRegex.test(formData.guideEmail)) {
+            newErrors.guideEmail = "Enter a valid email address";
         }
 
+        // Validate Primary Phone
+        if (!formData.guidePhoneNo.trim()) {
+            newErrors.guidePhoneNo = "Primary phone no is required";
+        } else if (!phoneRegex.test(formData.guidePhoneNo)) {
+            newErrors.guidePhoneNo = "Enter a valid 10-digit phone number";
+        }
+
+        // Validate Secondary Phone (Optional)
         if (
-            formData.secondaryPhone.trim() &&
-            !phoneRegex.test(formData.secondaryPhone)
+            formData.guidePhoneNo2.trim() &&
+            !phoneRegex.test(formData.guidePhoneNo2)
         ) {
-            newErrors.secondaryPhone = "Enter a valid 10-digit phone number";
+            newErrors.guidePhoneNo2 = "Enter a valid 10-digit phone number";
         }
 
-        if (!formData.experience.trim()) {
-            newErrors.experience = "Years of Experience is required";
-        } else if (isNaN(formData.experience) || Number(formData.experience) < 0) {
-            newErrors.experience = "Enter a valid positive number";
+        // Validate Experience
+        if (!formData.guideExperience.trim()) {
+            newErrors.guideExperience = "Years of Experience is required";
+        } else if (isNaN(formData.guideExperience) || Number(formData.guideExperience) < 0) {
+            newErrors.guideExperience = "Enter a valid positive number";
         }
 
-        if (!formData.address.trim()) newErrors.address = "Address is required";
+        // Validate Address
+        if (!formData.guideAddress.trim()) newErrors.guideAddress = "Address is required";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    // 2. Updated Handle Submit using AXIOS
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitSuccess(null);
@@ -75,45 +87,48 @@ const NewGuide = () => {
         if (validateForm()) {
             setIsSubmitting(true);
             try {
+                // 2. Prepare Payload
+                const payload = { ...formData };
+                
+                // 3. Logic to delete guidePhoneNo2 key if empty
+                if (!payload.guidePhoneNo2 || payload.guidePhoneNo2.trim() === "") {
+                    delete payload.guidePhoneNo2;
+                }
+
+                console.log("Sending Payload:", payload);
+
                 // --- Axios Request Start ---
-                // Replace with your actual API endpoint
                 const response = await axios.post(
-                    "https://your-api-endpoint.com/api/guides",
-                    formData
+                    "http://localhost:3000/api/v1/save/create/new/guide",
+                    payload
                 );
 
-                // Axios automatically throws an error for non-200 status codes,
-                // so if we reach here, the request was successful.
                 console.log("Server Response:", response.data);
-                // --- Axios Request End ---
-
                 setSubmitSuccess("Guide created successfully!");
 
                 // Reset form on success
                 setFormData({
                     guideName: "",
                     guideId: "",
-                    primaryPhone: "",
-                    secondaryPhone: "",
-                    experience: "",
-                    address: "",
+                    guideEmail: "",
+                    guidePhoneNo: "",
+                    guidePhoneNo2: "",
+                    guideExperience: "",
+                    guideAddress: "",
                 });
             } catch (error) {
                 console.error("Error submitting form:", error);
 
-                // Better error handling with Axios
+                // Error handling
                 if (error.response) {
-                    // The server responded with a status code outside the 2xx range
                     setSubmitSuccess(
                         `Failed: ${error.response.data.message || "Server Error"}`
                     );
                 } else if (error.request) {
-                    // The request was made but no response was received
                     setSubmitSuccess(
                         "Failed: No response from server. Check your connection."
                     );
                 } else {
-                    // Something happened in setting up the request
                     setSubmitSuccess("Failed to send request.");
                 }
             } finally {
@@ -138,10 +153,10 @@ const NewGuide = () => {
                 {submitSuccess && (
                     <div
                         className={`mb-6 text-center p-3 rounded-lg ${submitSuccess.includes("Success") ||
-                                submitSuccess.includes("successfully")
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
+                            submitSuccess.includes("successfully")
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
                     >
                         {submitSuccess}
                     </div>
@@ -180,20 +195,35 @@ const NewGuide = () => {
                         )}
                     </div>
 
+                    {/* Email Field (Added) */}
+                    <div>
+                        <input
+                            type="email"
+                            name="guideEmail"
+                            value={formData.guideEmail}
+                            onChange={handleChange}
+                            placeholder="Email Address"
+                            className={inputClass(errors.guideEmail)}
+                        />
+                        {errors.guideEmail && (
+                            <p className="text-red-500 text-sm mt-1 ml-2">{errors.guideEmail}</p>
+                        )}
+                    </div>
+
                     {/* Primary Phone */}
                     <div>
                         <input
                             type="tel"
-                            name="primaryPhone"
-                            value={formData.primaryPhone}
+                            name="guidePhoneNo"
+                            value={formData.guidePhoneNo}
                             onChange={handleChange}
                             placeholder="Primary phone no"
                             maxLength={10}
-                            className={inputClass(errors.primaryPhone)}
+                            className={inputClass(errors.guidePhoneNo)}
                         />
-                        {errors.primaryPhone && (
+                        {errors.guidePhoneNo && (
                             <p className="text-red-500 text-sm mt-1 ml-2">
-                                {errors.primaryPhone}
+                                {errors.guidePhoneNo}
                             </p>
                         )}
                     </div>
@@ -202,16 +232,16 @@ const NewGuide = () => {
                     <div>
                         <input
                             type="tel"
-                            name="secondaryPhone"
-                            value={formData.secondaryPhone}
+                            name="guidePhoneNo2"
+                            value={formData.guidePhoneNo2}
                             onChange={handleChange}
-                            placeholder="Secondary phone no"
+                            placeholder="Secondary phone no (Optional)"
                             maxLength={10}
-                            className={inputClass(errors.secondaryPhone)}
+                            className={inputClass(errors.guidePhoneNo2)}
                         />
-                        {errors.secondaryPhone && (
+                        {errors.guidePhoneNo2 && (
                             <p className="text-red-500 text-sm mt-1 ml-2">
-                                {errors.secondaryPhone}
+                                {errors.guidePhoneNo2}
                             </p>
                         )}
                     </div>
@@ -220,16 +250,16 @@ const NewGuide = () => {
                     <div>
                         <input
                             type="number"
-                            name="experience"
-                            value={formData.experience}
+                            name="guideExperience"
+                            value={formData.guideExperience}
                             onChange={handleChange}
                             placeholder="Years of Experience"
                             min="0"
-                            className={inputClass(errors.experience)}
+                            className={inputClass(errors.guideExperience)}
                         />
-                        {errors.experience && (
+                        {errors.guideExperience && (
                             <p className="text-red-500 text-sm mt-1 ml-2">
-                                {errors.experience}
+                                {errors.guideExperience}
                             </p>
                         )}
                     </div>
@@ -237,15 +267,15 @@ const NewGuide = () => {
                     {/* Address */}
                     <div>
                         <textarea
-                            name="address"
-                            value={formData.address}
+                            name="guideAddress"
+                            value={formData.guideAddress}
                             onChange={handleChange}
                             placeholder="Address"
                             rows="4"
-                            className={`${inputClass(errors.address)} resize-none`}
+                            className={`${inputClass(errors.guideAddress)} resize-none`}
                         ></textarea>
-                        {errors.address && (
-                            <p className="text-red-500 text-sm mt-1 ml-2">{errors.address}</p>
+                        {errors.guideAddress && (
+                            <p className="text-red-500 text-sm mt-1 ml-2">{errors.guideAddress}</p>
                         )}
                     </div>
 
