@@ -43,8 +43,10 @@ function App() {
           <Route path='/about' element={<MainAboutUs/>}/>
           <Route path='/packages' element={<SeeAll/>}/>
           <Route path='/requestGuide' element={<GuideForm/>}/>
-          {/* <Blog/>
-          <DashLayout/> */}
+          <Route path='/blog' element={<Blog/>}/>
+          <Route path='/dashboard' element={<DashLayout/>}/>
+          
+          
         </Routes>
       </div>
 

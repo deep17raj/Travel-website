@@ -9,19 +9,13 @@ const GuideCard = ({ guide, onToggleStatus, onEdit }) => {
             {/* 1. Profile & Basic Info */}
             <div className="flex items-center gap-4 w-full md:w-auto">
                 <div className="w-16 h-16 rounded-full bg-[#5937E0] flex items-center justify-center text-white flex-shrink-0">
-                    {/* If image exists, show img, else show Icon */}
-                    {guide.image ? (
-                        <img
-                            src={guide.image}
-                            alt={guide.name}
-                            className="w-full h-full rounded-full object-cover"
-                        />
-                    ) : (
-                        <User size={32} />
-                    )}
+                    {/* Placeholder User Icon (Schema doesn't have image yet) */}
+                    <User size={32} />
                 </div>
                 <div>
-                    <h3 className="text-xl font-bold text-gray-900">{guide.name}</h3>
+                    {/* MAPPED: guideName from Backend */}
+                    <h3 className="text-xl font-bold text-gray-900">{guide.guideName}</h3>
+                    {/* MAPPED: guideId from Backend */}
                     <p className="text-gray-500 text-sm font-medium">
                         ID: {guide.guideId}
                     </p>
@@ -34,14 +28,16 @@ const GuideCard = ({ guide, onToggleStatus, onEdit }) => {
                     <div className="w-8 h-8 rounded-full bg-[#5937E0] flex items-center justify-center text-white flex-shrink-0">
                         <Phone size={16} />
                     </div>
-                    <span className="font-semibold">{guide.phone}</span>
+                    {/* MAPPED: guidePhoneNo from Backend */}
+                    <span className="font-semibold">{guide.guidePhoneNo}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-gray-700">
                     <div className="w-8 h-8 rounded-full bg-[#5937E0] flex items-center justify-center text-white flex-shrink-0">
                         <MapPin size={16} />
                     </div>
-                    <span className="font-medium">{guide.location}</span>
+                    {/* MAPPED: guideAddress from Backend */}
+                    <span className="font-medium">{guide.guideAddress}</span>
                 </div>
             </div>
 
@@ -53,8 +49,10 @@ const GuideCard = ({ guide, onToggleStatus, onEdit }) => {
                         <input
                             type="checkbox"
                             className="sr-only peer"
-                            checked={guide.isEngaged}
-                            onChange={() => onToggleStatus(guide.id)}
+                            // MAPPED: engage from Backend
+                            checked={guide.engage}
+                            // Pass the unique _id or guideId depending on what you use for updates
+                            onChange={() => onToggleStatus(guide._id)}
                         />
                         <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#5937E0]"></div>
                     </label>
@@ -63,7 +61,7 @@ const GuideCard = ({ guide, onToggleStatus, onEdit }) => {
 
                 {/* Edit Button */}
                 <button
-                    onClick={() => onEdit(guide.id)}
+                    onClick={() => onEdit(guide._id)}
                     className="w-10 h-10 rounded-full bg-[#5937E0] flex items-center justify-center text-white hover:bg-[#482ab8] transition-colors shadow-md hover:shadow-lg"
                 >
                     <Edit2 size={18} />
@@ -79,41 +77,20 @@ const ManageGuide = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
 
-    // --- Fetch Data (Mock) ---
+    // --- Fetch Data from Backend ---
     useEffect(() => {
-        // Replace this with your actual API call: axios.get('/api/guides')
         const fetchGuides = async () => {
             try {
                 setLoading(true);
-                // Simulating backend response
-                const mockData = [
-                    {
-                        id: 1,
-                        guideId: "G-101",
-                        name: "Sujal das",
-                        phone: "88666262323",
-                        location: "Dehradun Uttarakhand",
-                        isEngaged: true,
-                    },
-                    {
-                        id: 2,
-                        guideId: "G-102",
-                        name: "Amit Verma",
-                        phone: "9876543210",
-                        location: "Rishikesh Uttarakhand",
-                        isEngaged: false,
-                    },
-                    {
-                        id: 3,
-                        guideId: "G-103",
-                        name: "Priya Singh",
-                        phone: "7766554433",
-                        location: "Manali Himachal",
-                        isEngaged: false,
-                    },
-                ];
-
-                setGuides(mockData);
+                // Replace localhost with your actual backend URL if different
+                const response = await axios.get("http://localhost:3000/api/v1/get/allGuide");
+                
+                // Assuming response.data contains the array of guides directly or in a property
+                // Adjust: response.data.guides or response.data depending on your controller response
+                console.log(response);
+                
+                setGuides(response.data.data); 
+                
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching guides:", error);
@@ -127,31 +104,31 @@ const ManageGuide = () => {
     // --- Handlers ---
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log("Searching for Guide ID:", searchTerm);
-        // You can filter locally or trigger a backend search here
+        // The filtering happens in 'filteredGuides' below
     };
 
     const handleToggleStatus = (id) => {
+        // Optimistic UI Update: Update local state immediately
         setGuides(
             guides.map((guide) =>
-                guide.id === id ? { ...guide, isEngaged: !guide.isEngaged } : guide
+                guide._id === id ? { ...guide, engage: !guide.engage } : guide
             )
         );
 
-        // Optional: Send update to backend
-        // axios.patch(`/api/guides/${id}`, { isEngaged: !currentStatus });
+        // TODO: Send API call to update backend status
+        // axios.patch(`http://localhost:3000/api/v1/update/guide/${id}`, { engage: !currentStatus });
     };
 
     const handleEdit = (id) => {
         console.log("Edit guide:", id);
-        // navigation.navigate(`/admin/edit-guide/${id}`);
+        // Navigate to edit page
     };
 
-    // Filter guides based on search term
+    // Filter guides based on search term (Name or ID)
     const filteredGuides = guides.filter(
         (guide) =>
-            guide.guideId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            guide.name.toLowerCase().includes(searchTerm.toLowerCase())
+            guide.guideId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            guide.guideName?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -163,7 +140,7 @@ const ManageGuide = () => {
                     <div className="relative w-full md:w-[60%]">
                         <input
                             type="text"
-                            placeholder="Search By Guide Id"
+                            placeholder="Search By Guide Id or Name"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full px-6 py-3 rounded-xl border border-gray-300 focus:border-[#5937E0] focus:ring-1 focus:ring-[#5937E0] outline-none text-gray-700 bg-white shadow-sm"
@@ -187,13 +164,13 @@ const ManageGuide = () => {
             {/* Guides List */}
             <div className="max-w-5xl mx-auto">
                 {loading ? (
-                    <div className="text-center py-10">Loading guides...</div>
+                    <div className="text-center py-10 text-gray-500">Loading guides...</div>
                 ) : (
                     <div className="flex flex-col gap-4">
                         {filteredGuides.length > 0 ? (
                             filteredGuides.map((guide) => (
                                 <GuideCard
-                                    key={guide.id}
+                                    key={guide._id} // Use MongoDB _id as key
                                     guide={guide}
                                     onToggleStatus={handleToggleStatus}
                                     onEdit={handleEdit}
