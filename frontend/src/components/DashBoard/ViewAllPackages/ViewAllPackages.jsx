@@ -8,50 +8,28 @@ const ViewAllPackages = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // --- Mock Data for Initial Display (Replace with backend fetch) ---
+  // --- Fetch Data from Backend ---
   useEffect(() => {
-    // Simulator for backend call
     const fetchPackages = async () => {
       try {
-        // UNCOMMENT THIS TO USE REAL BACKEND:
-        // const response = await axios.get('https://your-api.com/api/packages');
-        // setPackages(response.data);
+        setLoading(true);
+        // Replace with your actual backend URL
+        const response = await axios.get('http://localhost:3000/api/v1/get/allpackage');
         
-        // Mock Data simulation
-        const mockData = [
-          {
-            id: 1,
-            title: 'Nainital',
-            image: 'https://images.unsplash.com/photo-1572883454114-1cf0031a029e?q=80&w=1000&auto=format&fit=crop',
-            description: "Discover Nainital's spiritual aura, riverfront temples, heritage sites, and thrilling boating adventures led by a trusted local guide."
-          },
-          {
-            id: 2,
-            title: 'Rishikesh',
-            image: 'https://images.unsplash.com/photo-1596021688656-35fdc9ed0274?q=80&w=1000&auto=format&fit=crop',
-            description: "Experience the Yoga Capital of the World with exclusive rafting sessions, Ganga Aarti viewing, and meditation retreats."
-          },
-          {
-            id: 3,
-            title: 'Manali',
-            image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?q=80&w=1000&auto=format&fit=crop',
-            description: "Explore snow-capped peaks, Solang Valley adventures, and cozy cottage stays in the heart of Himachal."
-          },
-          {
-            id: 4,
-            title: 'Goa',
-            image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=1000&auto=format&fit=crop',
-            description: "Sun, sand, and sea. Enjoy the vibrant nightlife, Portuguese heritage, and pristine beaches of North and South Goa."
-          },
-          {
-            id: 5,
-            title: 'Jaipur',
-            image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1000&auto=format&fit=crop',
-            description: "Walk through the Pink City, visit the Hawa Mahal, Amer Fort, and experience royal Rajasthani hospitality."
-          }
-        ];
-        
-        setPackages(mockData);
+        // Check structure: response.data could be the array or { data: [...] }
+        const rawData = Array.isArray(response.data) ? response.data : response.data.data || [];
+
+        // MAP Backend Schema to UI Component Props
+        // Schema: packageName, imageUrl, displayText, _id
+        // Component Expects: title, image, description, id
+        const formattedData = rawData.map((pkg) => ({
+            id: pkg._id,
+            title: pkg.packageName,
+            image: pkg.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image', // Fallback image
+            description: pkg.displayText || 'No description available.'
+        }));
+
+        setPackages(formattedData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching packages:", error);
@@ -103,17 +81,24 @@ const ViewAllPackages = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center">
-          {filteredPackages.map((pkg) => (
-            <PackageCard 
-              key={pkg.id} 
-              data={pkg} 
-              onManage={handleManage} 
-            />
-          ))}
+          {filteredPackages.length > 0 ? (
+            filteredPackages.map((pkg) => (
+              <PackageCard 
+                key={pkg.id} 
+                data={pkg} 
+                onManage={handleManage} 
+              />
+            ))
+          ) : (
+             // Handle case where fetch worked but returned empty list
+             <div className="col-span-full text-center py-20 text-gray-400">
+                 No packages found.
+             </div>
+          )}
         </div>
       )}
       
-      {!loading && filteredPackages.length === 0 && (
+      {!loading && packages.length > 0 && filteredPackages.length === 0 && (
           <div className="text-center py-20 text-gray-400">
               No packages found matching "{searchTerm}"
           </div>
