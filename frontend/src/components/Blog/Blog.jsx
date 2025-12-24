@@ -9,6 +9,8 @@ import Plane1 from "../../assets/Form/Plane1.svg";
 import Ecp1 from "../../assets/Form/Ecp1.svg";
 import Ecp2 from "../../assets/Form/Ecp2.svg";
 import Ecp3 from "../../assets/Form/Ecp3.svg";
+import.meta.env.VITE_API_URL
+
 
 function Blog() {
   // 1. Updated state keys to match Mongoose Schema
@@ -65,7 +67,7 @@ function Blog() {
       console.log("Sending Payload:", payload);
       
       // Replace with your actual API endpoint
-      const res = await axios.post("http://localhost:3000/api/v1/save/customer/details", payload);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/customer/details`, payload);
       console.log("Response:", res.data);
 
       setForm({

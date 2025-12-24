@@ -12,12 +12,8 @@ const CustomerSection = () => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        // Replace localhost with your actual backend URL
         const response = await axios.get("http://localhost:3000/api/v1/get/all-customer");
-        
-        // Handle response structure (Array directly or nested in data object)
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];
-        
         setCustomers(data);
         setLoading(false);
       } catch (error) {
@@ -28,6 +24,24 @@ const CustomerSection = () => {
 
     fetchCustomers();
   }, []);
+
+  // --- Handle Mark Visited (API Call) ---
+  const handleMarkVisited = async (id) => {
+    try {
+        // 1. Send PATCH request to backend
+        await axios.patch(`http://localhost:3000/api/v1/customer-request/mark-visited/${id}`);
+        
+        // 2. Update Local State (Optimistic UI update)
+        setCustomers(prevCustomers => 
+            prevCustomers.map(cust => 
+                cust._id === id ? { ...cust, IsVisited: true } : cust
+            )
+        );
+    } catch (error) {
+        console.error("Error marking as visited:", error);
+        alert("Failed to update status. Please try again.");
+    }
+  };
 
   // --- Search Filter ---
   const filteredCustomers = customers.filter((customer) => 
@@ -75,8 +89,10 @@ const CustomerSection = () => {
             {filteredCustomers.length > 0 ? (
                 filteredCustomers.map((customer) => (
                     <CustomerRequestCard 
-                        key={customer._id} // Use MongoDB _id
-                        data={customer} 
+                        key={customer._id} 
+                        data={customer}
+                        // Pass the handler down to the card
+                        onMarkVisited={handleMarkVisited}
                     />
                 ))
             ) : (

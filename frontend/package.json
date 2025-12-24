@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "private": true,
+  "proxy": "https://api.satotra.com/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -13,6 +14,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",
     "framer-motion": "^12.23.26",
+    "http-proxy-middleware": "^3.0.5",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

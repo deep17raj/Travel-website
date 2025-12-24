@@ -41,6 +41,7 @@ function App() {
       <div className="relative z-0">
          <Routes>
           <Route path='/' element={<HomePage/>}/>
+          <Route path='/requestGuide' element={<GuideForm/>}/>
           <Route path='/about' element={<MainAboutUs/>}/>
           <Route path='/packages' element={<SeeAll/>}/>
           <Route path='/requestGuide' element={<GuideForm/>}/>

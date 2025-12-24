@@ -7,17 +7,13 @@ const GuideRequest = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch Data from Backend
+  // --- Fetch Data from Backend ---
   useEffect(() => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        // Replace with your actual backend URL
         const response = await axios.get('http://localhost:3000/api/v1/get/allGuideRequest');
-        
-        // Handle different response structures (array directly or nested in data object)
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];
-        
         setRequests(data);
         setLoading(false);
       } catch (error) {
@@ -29,7 +25,25 @@ const GuideRequest = () => {
     fetchRequests();
   }, []);
 
-  // Filter Logic
+  // --- Handle Mark Visited (API Call) ---
+  const handleMarkVisited = async (id) => {
+    try {
+        // 1. Send PATCH request
+        await axios.patch(`http://localhost:3000/api/v1/guide-request/mark-visited/${id}`);
+        
+        // 2. Update Local State (Optimistic UI Update)
+        setRequests(prevRequests => 
+            prevRequests.map(req => 
+                req._id === id ? { ...req, IsVisited: true } : req
+            )
+        );
+    } catch (error) {
+        console.error("Error marking guide request as visited:", error);
+        alert("Failed to update status. Please try again.");
+    }
+  };
+
+  // --- Filter Logic ---
   const filteredRequests = requests.filter((req) => 
     req.guideName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     req.guideEmail?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -64,7 +78,11 @@ const GuideRequest = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-10 justify-items-center">
           {filteredRequests.length > 0 ? (
             filteredRequests.map((request) => (
-              <GuideRequestCard key={request._id} data={request} />
+              <GuideRequestCard 
+                key={request._id} 
+                data={request} 
+                onMarkVisited={handleMarkVisited} // Pass handler
+              />
             ))
           ) : (
              <div className="col-span-full text-gray-500 text-lg mt-10">
