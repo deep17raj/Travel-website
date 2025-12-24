@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper modules
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import Pic1 from "../../assets/Pic1.svg"
+import { handleCall } from '../../utils/contactHelper';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -138,7 +139,7 @@ export default function DestinationCarousel() {
 
                 {/* Footer Actions */}
                 <div className="mt-auto flex items-center justify-between pt-2">
-                  <button className="flex items-center gap-2 text-[#1a73e8] hover:text-blue-700 transition-colors font-semibold text-sm">
+                  <button onClick={() => handleCall('+971501234567')} className="flex items-center gap-2 text-[#1a73e8] hover:text-blue-700 transition-colors font-semibold text-sm">
                     <Phone size={16} className="fill-current" />
                     <span>Call for Pricing</span>
                   </button>

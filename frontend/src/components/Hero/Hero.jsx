@@ -8,6 +8,7 @@ import Tel from "../../assets/Tel.svg";
 import Map from "../../assets/Maps.svg";
 import Plane1 from "../../assets/Plane1.svg";
 import Plane2 from "../../assets/Plane2.svg";
+import { handleCall } from "../../utils/contactHelper";
 
 function Hero() {
   return (
@@ -47,7 +48,7 @@ function Hero() {
           </p>
 
           {/* CTA Button */}
-          <button className="bg-[#166EF3] hover:bg-blue-700 transition-all text-white font-semibold rounded-full px-8 py-3.5 shadow-lg shadow-blue-200 mt-2">
+          <button onClick={() => handleCall('+971501234567')} className="bg-[#166EF3] hover:bg-blue-700 transition-all text-white font-semibold rounded-full px-8 py-3.5 shadow-lg shadow-blue-200 mt-2">
             Contact Now
           </button>
         </div>

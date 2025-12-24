@@ -7,6 +7,7 @@ import NewGuide from './components/DashBoard/NewGuide/NewGuide.jsx'
 import DashLayout from './components/DashBoard/DashLayout/DashLayout.jsx'
 import HomePage from './components/HomePage/HomePage.jsx'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import UpdateGuide from './components/DashBoard/UpdateGuide/UpdateGuide.jsx'
 
 function App() {
 
@@ -45,7 +46,7 @@ function App() {
           <Route path='/requestGuide' element={<GuideForm/>}/>
           <Route path='/blog' element={<Blog/>}/>
           <Route path='/dashboard' element={<DashLayout/>}/>
-          
+          <Route path="/dashboard/edit-guide/:id" element={<UpdateGuide/>} />
           
         </Routes>
       </div>

@@ -2,6 +2,7 @@ import React from "react";
 // Ensure these paths match your project structure
 import Shield from "../../assets/TT/shield.svg";
 import Tele from "../../assets/TT/telephone (1) 1.svg";
+import { handleCall } from "../../utils/contactHelper";
 
 function TrustTravel() {
   return (
@@ -39,7 +40,7 @@ function TrustTravel() {
 
         {/* Helpline Button */}
         <div className="mt-4">
-          <button className="bg-[#1a73e8] hover:bg-blue-700 transition-colors text-white rounded-full px-6 py-3 sm:px-10 sm:py-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-blue-200/50">
+          <button onClick={() => handleCall('+971501234567')} className="bg-[#1a73e8] hover:bg-blue-700 transition-colors text-white rounded-full px-6 py-3 sm:px-10 sm:py-4 flex items-center gap-3 sm:gap-4 shadow-lg shadow-blue-200/50">
             {/* Phone Icon */}
             <img 
               src={Tele} 
