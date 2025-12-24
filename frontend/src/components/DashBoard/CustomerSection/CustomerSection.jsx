@@ -1,55 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import CustomerRequestCard from './CustomerRequestCard';
 
-// MOCK DATA: Simulating backend response
-const mockCustomerData = [
-  {
-    id: 1,
-    name: 'Anjali Gupta',
-    phone: '9876543210',
-    email: 'anjali.travels@gmail.com',
-    location: 'Mumbai, Maharashtra',
-  },
-  {
-    id: 2,
-    name: 'Rohan Mehta',
-    phone: '8899776655',
-    email: 'rohan.m@yahoo.com',
-    location: 'Delhi, India',
-  },
-  {
-    id: 3,
-    name: 'Sarah Jenkins',
-    phone: '+1 415-555-0123',
-    email: 'sarah.j@travelo.com',
-    location: 'San Francisco',
-  },
-  {
-    id: 4,
-    name: 'Vikram Singh',
-    phone: '7766554433',
-    email: 'vikram.singh@outlook.com',
-    location: 'Jaipur, Rajasthan',
-  },
-  {
-    id: 5,
-    name: 'Emily Chen',
-    phone: '+65 9123 4567',
-    email: 'emily.c@gmail.com',
-    location: 'Singapore',
-  },
-  {
-    id: 6,
-    name: 'Arjun Reddy',
-    phone: '9988001122',
-    email: 'arjun.r@techmail.com',
-    location: 'Hyderabad, Telangana',
-  },
-];
-
 const CustomerSection = () => {
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // --- Fetch Data from Backend ---
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        setLoading(true);
+        // Replace localhost with your actual backend URL
+        const response = await axios.get("http://localhost:3000/api/v1/get/all-customer");
+        
+        // Handle response structure (Array directly or nested in data object)
+        const data = Array.isArray(response.data) ? response.data : response.data.data || [];
+        
+        setCustomers(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
+
+  // --- Search Filter ---
+  const filteredCustomers = customers.filter((customer) => 
+    customer.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.customerEmail?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="p-6 md:p-10 h-full w-full">
+    <div className="p-6 md:p-10 h-full w-full min-h-screen bg-[#FAFAFA]">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
@@ -65,7 +52,9 @@ const CustomerSection = () => {
         <div className="relative w-full md:w-auto">
             <input 
                 type="text" 
-                placeholder="Search by name or ID..." 
+                placeholder="Search by name or email..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full md:w-80 px-6 py-3 rounded-full border border-gray-200 focus:border-[#5937E0] focus:ring-2 focus:ring-purple-100 outline-none transition-all shadow-sm text-gray-700 bg-white"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#5937E0]">
@@ -76,12 +65,27 @@ const CustomerSection = () => {
         </div>
       </div>
 
-      {/* Grid Layout for Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 justify-items-center md:justify-items-stretch">
-        {mockCustomerData.map((customer) => (
-          <CustomerRequestCard key={customer.id} data={customer} />
-        ))}
-      </div>
+      {/* Content Area */}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5937E0]"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 justify-items-center md:justify-items-stretch">
+            {filteredCustomers.length > 0 ? (
+                filteredCustomers.map((customer) => (
+                    <CustomerRequestCard 
+                        key={customer._id} // Use MongoDB _id
+                        data={customer} 
+                    />
+                ))
+            ) : (
+                <div className="col-span-full text-center text-gray-400 mt-10">
+                    No customers found.
+                </div>
+            )}
+        </div>
+      )}
     </div>
   );
 };

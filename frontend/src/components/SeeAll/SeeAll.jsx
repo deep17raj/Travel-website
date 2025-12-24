@@ -1,142 +1,24 @@
-import React, { useState } from 'react';
-// 1. Import Swiper React components
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+// Swiper imports
 import { Swiper, SwiperSlide } from 'swiper/react';
-// 2. Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-// 3. Import required modules
 import { Pagination, Navigation } from 'swiper/modules';
 import NavBar from '../NavBar/NavBar';
+import { handleCall } from '../../utils/contactHelper';
 
-// --- MOCK DATA ---
-const adventureData = [
-  {
-    id: 1,
-    title: "Para Gliding",
-    desc: "Fly over Rishikesh's valleys and landscapes for an unforgettable thrill.",
-    duration: "3 Hours",
-    image: "https://images.unsplash.com/photo-1516939884455-1445c8652f83?q=80&w=600&auto=format&fit=crop", 
-  },
-  {
-    id: 2,
-    title: "River Rafting",
-    desc: "Experience the adrenaline rush of the Ganges rapids with expert guides.",
-    duration: "4 Hours",
-    image: "https://images.unsplash.com/photo-1530866495561-507c9faab2ed?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Bunji Jumping",
-    desc: "Take the leap of faith from India's highest bungee platform.",
-    duration: "2 Hours",
-    image: "https://images.unsplash.com/photo-1515526978187-b9c1cb843f52?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    title: "Camping",
-    desc: "Stay overnight under the stars in premium riverside tents.",
-    duration: "2 Days",
-    image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=600&auto=format&fit=crop",
-  }
-];
-
-const spiritualData = [
-  {
-    id: 1,
-    title: "Char Dham Yatra",
-    desc: "A sacred pilgrimage to the four holy shrines in the Himalayas.",
-    duration: "10 Days",
-    image: "https://images.unsplash.com/photo-1566808902506-6992d534f40f?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "Do Dham Yatra",
-    desc: "Visit Kedarnath and Badrinath for spiritual rejuvenation.",
-    duration: "5 Days",
-    image: "https://images.unsplash.com/photo-1626084478174-8466e339174b?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Ganga Aarti",
-    desc: "Witness the divine evening prayer ceremony on the banks of the Ganges.",
-    duration: "1 Evening",
-    image: "https://images.unsplash.com/photo-1605626245086-45ef92dd886b?q=80&w=600&auto=format&fit=crop",
-  },
-   {
-    id: 1,
-    title: "Char Dham Yatra",
-    desc: "A sacred pilgrimage to the four holy shrines in the Himalayas.",
-    duration: "10 Days",
-    image: "https://images.unsplash.com/photo-1566808902506-6992d534f40f?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "Do Dham Yatra",
-    desc: "Visit Kedarnath and Badrinath for spiritual rejuvenation.",
-    duration: "5 Days",
-    image: "https://images.unsplash.com/photo-1626084478174-8466e339174b?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Ganga Aarti",
-    desc: "Witness the divine evening prayer ceremony on the banks of the Ganges.",
-    duration: "1 Evening",
-    image: "https://images.unsplash.com/photo-1605626245086-45ef92dd886b?q=80&w=600&auto=format&fit=crop",
-  },
-];
-
-const trekkingData = [
-  {
-    id: 1,
-    title: "Valley of Flowers",
-    desc: "Trek through the UNESCO World Heritage site filled with vibrant blooms.",
-    duration: "6 Days",
-    image: "https://images.unsplash.com/photo-1586185870020-438eb48a7351?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "Kuari Pass Trek",
-    desc: "Witness the magnificent views of Nanda Devi and Dronagiri peaks.",
-    duration: "5 Days",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Chandrashila Trek",
-    desc: "Summit the Chandrashila peak for a panoramic view of the Himalayas.",
-    duration: "4 Days",
-    image: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 1,
-    title: "Valley of Flowers",
-    desc: "Trek through the UNESCO World Heritage site filled with vibrant blooms.",
-    duration: "6 Days",
-    image: "https://images.unsplash.com/photo-1586185870020-438eb48a7351?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "Kuari Pass Trek",
-    desc: "Witness the magnificent views of Nanda Devi and Dronagiri peaks.",
-    duration: "5 Days",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Chandrashila Trek",
-    desc: "Summit the Chandrashila peak for a panoramic view of the Himalayas.",
-    duration: "4 Days",
-    image: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?q=80&w=600&auto=format&fit=crop",
-  },
-];
-
-// --- CARD COMPONENT (Unchanged) ---
+// --- CARD COMPONENT ---
 const PackageCard = ({ item }) => (
   <div className="bg-white rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden border border-gray-100 mx-2 mb-10 mt-2">
     {/* Image */}
     <div className="h-56 w-full relative">
-      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+      <img 
+        src={item.imageUrl || "https://via.placeholder.com/600x400?text=No+Image"} 
+        alt={item.packageName} 
+        className="w-full h-full object-cover" 
+      />
       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-700 shadow-sm">
          FEATURED
       </div>
@@ -144,22 +26,19 @@ const PackageCard = ({ item }) => (
     
     {/* Content */}
     <div className="p-6 flex flex-col flex-grow">
-      <h3 className="font-bold text-xl text-gray-900 mb-2">{item.title}</h3>
-      <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-2">{item.desc}</p>
+      <h3 className="font-bold text-xl text-gray-900 mb-2">{item.packageName}</h3>
+      <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-2">
+        {item.displayText || "Explore this amazing package."}
+      </p>
       
       <div className="flex-grow"></div>
 
-      <div className="flex items-center gap-2 mb-6 text-gray-400 text-xs font-bold uppercase tracking-wider">
-        
-        
-      </div>
-
       <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-          <span className="text-xs font-bold text-[#8B5CF6] uppercase tracking-wider cursor-pointer hover:text-[#7c3aed]">
-             Call for Pricing
+          <span onClick={() => handleCall('+971501234567')} className="text-xs font-bold text-[#8B5CF6] uppercase tracking-wider cursor-pointer hover:text-[#7c3aed]">
+              Call for Pricing
           </span>
           <button className="bg-[#8B5CF6] hover:bg-[#7c3aed] text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-colors shadow-lg shadow-purple-100">
-             Read More
+              Read More
           </button>
       </div>
     </div>
@@ -168,8 +47,10 @@ const PackageCard = ({ item }) => (
 
 // --- SECTION WRAPPER (Swiper Implementation) ---
 const PackageSection = ({ categoryTitle, data }) => {
-  // We use this state to access the Swiper instance from our custom buttons
   const [swiperRef, setSwiperRef] = useState(null);
+
+  // If no data for this category, don't render the section
+  if (!data || data.length === 0) return null;
 
   return (
     <div className="mb-20">
@@ -203,38 +84,27 @@ const PackageSection = ({ categoryTitle, data }) => {
 
       {/* Swiper Carousel */}
       <Swiper
-        onSwiper={setSwiperRef} // Get the instance
+        onSwiper={setSwiperRef}
         slidesPerView={1}
         spaceBetween={20}
-        loop={true}
+        loop={true} // Only loop if enough slides, but true is generally safe
         pagination={{
           clickable: true,
-          // Customizing the pagination bullets (dots)
           modifierClass: 'swiper-pagination-custom-',
           renderBullet: function (index, className) {
              return '<span class="' + className + ' bg-gray-300 w-3 h-3 rounded-full inline-block mx-1 hover:bg-[#8B5CF6] transition-colors cursor-pointer"></span>';
           },
         }}
         modules={[Pagination, Navigation]}
-        // RESPONSIVE BREAKPOINTS
         breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 30,
-          },
-          1024: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-          },
+          640: { slidesPerView: 1, spaceBetween: 20 },
+          768: { slidesPerView: 2, spaceBetween: 30 },
+          1024: { slidesPerView: 3, spaceBetween: 30 },
         }}
-        className="pb-14 px-2" // Add padding bottom for the dots
+        className="pb-14 px-2"
       >
         {data.map((item) => (
-          <SwiperSlide key={item.id} className="h-auto">
+          <SwiperSlide key={item._id} className="h-auto">
              <PackageCard item={item} />
           </SwiperSlide>
         ))}
@@ -243,29 +113,74 @@ const PackageSection = ({ categoryTitle, data }) => {
   );
 };
 
-
 // --- MAIN COMPONENT ---
 function SeeAll() {
+  const [allPackages, setAllPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // --- Fetch Data ---
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Replace with your actual backend URL
+        const response = await axios.get("http://localhost:3000/api/v1/get/allpackage");
+        
+        // Handle response structure
+        const data = Array.isArray(response.data) ? response.data : response.data.data || [];
+        setAllPackages(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching packages:", error);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // --- Group Data by Category ---
+  // Note: Adjust category strings ('adventure', 'spiritual', etc.) to match exactly what you save in backend (case-sensitive)
+  const adventureData = allPackages.filter(pkg => pkg.packageCategory?.toLowerCase() === 'adventure');
+  const spiritualData = allPackages.filter(pkg => pkg.packageCategory?.toLowerCase() === 'spiritual');
+  const trekkingData = allPackages.filter(pkg => pkg.packageCategory?.toLowerCase() === 'trekking');
+  
+  // Optional: Catch-all for others (e.g. 'luxury', 'beach') or add more sections
+  const otherData = allPackages.filter(pkg => !['adventure', 'spiritual', 'trekking'].includes(pkg.packageCategory?.toLowerCase()));
+
   return (
     <div>
       <NavBar/>
-      <div className="w-full  pt-16 pb-24 font-sans">
+      <div className="w-full pt-16 pb-24 font-sans">
        <div className="max-w-7xl mx-auto px-4 md:px-6">
            
-           <PackageSection 
-              categoryTitle="Adventure & Rafting Packages" 
-              data={adventureData} 
-           />
+           {loading ? (
+               <div className="text-center py-20 text-gray-500">Loading packages...</div>
+           ) : (
+               <>
+                   <PackageSection 
+                      categoryTitle="Adventure & Rafting Packages" 
+                      data={adventureData} 
+                   />
 
-           <PackageSection 
-              categoryTitle="Spiritual & Religious Packages" 
-              data={spiritualData} 
-           />
+                   <PackageSection 
+                      categoryTitle="Spiritual & Religious Packages" 
+                      data={spiritualData} 
+                   />
 
-           <PackageSection 
-              categoryTitle="Trekking & Hiking Packages" 
-              data={trekkingData} 
-           />
+                   <PackageSection 
+                      categoryTitle="Trekking & Hiking Packages" 
+                      data={trekkingData} 
+                   />
+                   
+                   {/* Render other categories if they exist */}
+                   {otherData.length > 0 && (
+                       <PackageSection 
+                          categoryTitle="More Experiences" 
+                          data={otherData} 
+                       />
+                   )}
+               </>
+           )}
 
            {/* CTA Section */}
            <div className="mt-12 text-center bg-white rounded-[40px] p-12 shadow-sm border border-gray-100">
@@ -279,7 +194,7 @@ function SeeAll() {
            </div>
        </div>
        
-       {/* Global overrides for Swiper Pagination to match design color (Purple) */}
+       {/* Global styles for Swiper dots */}
        <style jsx global>{`
          .swiper-pagination-bullet-active {
            background-color: #8B5CF6 !important;
@@ -290,7 +205,6 @@ function SeeAll() {
        `}</style>
     </div>
     </div>
-    
   )
 }
 
