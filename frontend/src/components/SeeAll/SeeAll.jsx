@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 // 3. Import required modules
 import { Pagination, Navigation } from 'swiper/modules';
+import NavBar from '../NavBar/NavBar';
 
 // --- MOCK DATA ---
 const adventureData = [
@@ -246,7 +247,9 @@ const PackageSection = ({ categoryTitle, data }) => {
 // --- MAIN COMPONENT ---
 function SeeAll() {
   return (
-    <div className="w-full  pt-16 pb-24 font-sans">
+    <div>
+      <NavBar/>
+      <div className="w-full  pt-16 pb-24 font-sans">
        <div className="max-w-7xl mx-auto px-4 md:px-6">
            
            <PackageSection 
@@ -286,6 +289,8 @@ function SeeAll() {
          }
        `}</style>
     </div>
+    </div>
+    
   )
 }
 

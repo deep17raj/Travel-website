@@ -52,7 +52,7 @@ function TestimonialText() {
   const currentData = testimonials[currentIndex];
 
   return (
-    <div className="relative w-full py-16 px-4  overflow-hidden flex flex-col items-center anime">
+    <div className="relative w-full py-16 px-4  overflow-hidden flex flex-col items-center ">
       
       {/* Background Decoration (LeftTop) - Optional positioning */}
       <div className="absolute top-10 left-0 opacity-50 pointer-events-none hidden lg:block">

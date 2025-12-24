@@ -20,7 +20,7 @@ function TestimonialVideo() {
   const [swiperRef, setSwiperRef] = useState(null);
 
   return (
-    <div className='relative w-full py-16 overflow-hidden anime'>
+    <div className='relative w-full py-16 overflow-hidden '>
       
       {/* --- Decorative Background Dots --- */}
       <div className="absolute top-0 left-0 -translate-x-4 translate-y-4 md:translate-x-0 md:translate-y-0 z-0">

@@ -7,7 +7,7 @@ import Comp from "../../assets/KF/Comp.svg";
 
 function KeyFeature() {
   return (
-    <section className="w-full py-16 lg:py-24  overflow-hidden anime">
+    <section className="w-full py-16 lg:py-24  overflow-hidden ">
 
       {/* Main Container: w-[90%] on mobile, w-3/4 on desktop */}
       <div className="w-[90%] lg:w-3/4 mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">

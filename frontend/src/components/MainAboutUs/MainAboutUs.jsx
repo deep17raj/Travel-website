@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // Removed react-slick imports since we are switching to a static grid
 import Trek from "../../assets/Trek.svg"; 
+import NavBar from "../NavBar/NavBar";
 
 function MainAboutUs() {
   // --- FAQ State Logic ---
@@ -42,7 +43,7 @@ function MainAboutUs() {
 
   return (
     <div className="w-full  font-sans pb-20">
-      
+      <NavBar/>
       {/* 1. Header & Video Section */}
       <div className="flex flex-col mt-10 md:mt-16">
         <div className="text-center mb-8">
