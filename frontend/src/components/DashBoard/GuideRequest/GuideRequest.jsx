@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GuideRequestCard from './GuideRequestCard';
-
+import.meta.env.VITE_API_URL
 const GuideRequest = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ const GuideRequest = () => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3000/api/v1/get/allGuideRequest');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuideRequest`);
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];
         setRequests(data);
         setLoading(false);

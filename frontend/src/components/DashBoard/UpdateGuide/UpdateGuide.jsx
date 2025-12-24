@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-
+import.meta.env.VITE_API_URL
 const UpdateGuide = () => {
     const { id } = useParams(); // Get the ID from the URL
     const navigate = useNavigate();
@@ -102,7 +102,7 @@ const UpdateGuide = () => {
 
                 // --- PATCH REQUEST ---
                 await axios.patch(
-                    `http://localhost:3000/api/v1/modify/guide/${id}`,
+                    `${import.meta.env.VITE_API_URL}/api/v1/modify/guide/${id}`,
                     payload
                 );
 

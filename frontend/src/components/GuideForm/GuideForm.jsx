@@ -6,7 +6,7 @@ import Plane1 from "../../assets/Form/Plane1.svg";
 import Ecp1 from "../../assets/Form/Ecp1.svg";
 import Ecp2 from "../../assets/Form/Ecp2.svg";
 import Ecp3 from "../../assets/Form/Ecp3.svg";
-
+import.meta.env.VITE_API_URL
 function GuideForm({ isOpen, onClose = () => {} }) {
   // 1. State keys matching Mongoose schema
   const [form, setForm] = useState({
@@ -71,7 +71,7 @@ function GuideForm({ isOpen, onClose = () => {} }) {
 
       console.log("Sending Payload:", payload);
 
-      await axios.post("http://localhost:3000/api/v1/save/request/new/guide", payload);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/request/new/guide`, payload);
 
       // Simulate success
       setTimeout(() => {

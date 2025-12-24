@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper/modules';
 import NavBar from '../NavBar/NavBar';
 import { handleCall } from '../../utils/contactHelper';
+import.meta.env.VITE_API_URL
 
 // --- CARD COMPONENT ---
 const PackageCard = ({ item }) => (
@@ -124,7 +125,7 @@ function SeeAll() {
       try {
         setLoading(true);
         // Replace with your actual backend URL
-        const response = await axios.get("http://localhost:3000/api/v1/get/allpackage");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allpackage`);
         
         // Handle response structure
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];

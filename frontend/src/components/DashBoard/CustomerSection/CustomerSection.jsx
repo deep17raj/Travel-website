@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomerRequestCard from './CustomerRequestCard';
-
+import.meta.env.VITE_API_URL
 const CustomerSection = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ const CustomerSection = () => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:3000/api/v1/get/all-customer");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/all-customer`);
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];
         setCustomers(data);
         setLoading(false);

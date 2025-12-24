@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Trash2, Plus, Upload, Image as ImageIcon } from 'lucide-react';
-
+import.meta.env.VITE_API_URL
 const AddPackageForm = () => {
   // 1. Static Data State
   const [formData, setFormData] = useState({
@@ -107,7 +107,7 @@ const AddPackageForm = () => {
       // }
 
       // 5. Send Request
-      const response = await axios.post('http://localhost:3000/api/v1/save/new/package', data, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/new/package`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 

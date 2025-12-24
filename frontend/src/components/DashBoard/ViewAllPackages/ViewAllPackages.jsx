@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PackageCard from './PackageCard';
 import { Search } from 'lucide-react';
-
+import.meta.env.VITE_API_URL
 const ViewAllPackages = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ const ViewAllPackages = () => {
       try {
         setLoading(true);
         // Replace with your actual backend URL
-        const response = await axios.get('http://localhost:3000/api/v1/get/allpackage');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allpackage`);
         
         // Check structure: response.data could be the array or { data: [...] }
         const rawData = Array.isArray(response.data) ? response.data : response.data.data || [];

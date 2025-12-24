@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Search, Phone, MapPin, User, Edit2, Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import.meta.env.VITE_API_URL
 // --- Sub-Component: Individual Guide Card ---
 const GuideCard = ({ guide, onToggleStatus, onEdit }) => {
     return (
@@ -85,7 +85,7 @@ const ManageGuide = () => {
         const fetchGuides = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("http://localhost:3000/api/v1/get/allGuide");
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuide`);
                 const data = Array.isArray(response.data) ? response.data : response.data.data || [];
                 setGuides(data);
                 setLoading(false);

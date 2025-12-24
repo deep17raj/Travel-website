@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import Pic1 from "../../assets/Pic1.svg"; // Fallback image
 import { handleCall } from '../../utils/contactHelper';
+import.meta.env.VITE_API_URL
 
 // Import Swiper styles
 import 'swiper/css';
@@ -24,7 +25,7 @@ export default function DestinationCarousel() {
       try {
         setLoading(true);
         // Replace with your actual backend URL
-        const response = await axios.get("http://localhost:3000/api/v1/get/allpackage");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allpackage`);
         
         // Handle response structure
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];

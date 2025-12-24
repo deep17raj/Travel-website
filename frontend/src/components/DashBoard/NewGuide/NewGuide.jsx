@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import.meta.env.VITE_API_URL
 const NewGuide = () => {
     const [formData, setFormData] = useState({
         guideName: "", guideId: "", guideEmail: "",
@@ -46,7 +46,7 @@ const NewGuide = () => {
                 if (!payload.guidePhoneNo2 || payload.guidePhoneNo2.trim() === "") delete payload.guidePhoneNo2;
 
                 // --- POST REQUEST ---
-                await axios.post("http://localhost:3000/api/v1/save/create/new/guide", payload);
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/create/new/guide`, payload);
 
                 setSubmitSuccess("Guide created successfully!");
                 setFormData({
