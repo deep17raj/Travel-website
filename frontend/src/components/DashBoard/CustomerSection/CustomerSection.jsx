@@ -29,7 +29,7 @@ const CustomerSection = () => {
   const handleMarkVisited = async (id) => {
     try {
         // 1. Send PATCH request to backend
-        await axios.patch(`http://localhost:3000/api/v1/customer-request/mark-visited/${id}`);
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/customer-request/mark-visited/${id}`);
         
         // 2. Update Local State (Optimistic UI update)
         setCustomers(prevCustomers => 

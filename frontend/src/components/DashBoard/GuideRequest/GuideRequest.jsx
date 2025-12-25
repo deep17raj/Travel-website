@@ -29,7 +29,7 @@ const GuideRequest = () => {
   const handleMarkVisited = async (id) => {
     try {
         // 1. Send PATCH request
-        await axios.patch(`http://localhost:3000/api/v1/guide-request/mark-visited/${id}`);
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/guide-request/mark-visited/${id}`);
         
         // 2. Update Local State (Optimistic UI Update)
         setRequests(prevRequests => 
