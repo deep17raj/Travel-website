@@ -110,7 +110,7 @@ const ManageGuide = () => {
 
         try {
             // 2. Send API Request using guideId in URL
-            await axios.patch(`http://localhost:3000/api/v1/modify/guide/${guideId}`, {
+            await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/modify/guide/${guideId}`, {
                 engage: newStatus
             });
             console.log(`Guide ${guideId} status updated to ${newStatus}`);

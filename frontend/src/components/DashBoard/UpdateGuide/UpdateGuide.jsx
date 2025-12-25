@@ -28,7 +28,7 @@ const UpdateGuide = () => {
             try {
                 // Fetch all guides and find the one matching the ID
                 // (Ideally, backend should have a get-by-id route, but this works with your current setup)
-                const response = await axios.get("http://localhost:3000/api/v1/get/allGuide");
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuide`);
                 
                 const guides = response.data.data || response.data;
                 const guideToEdit = guides.find((g) => g.guideId === id);
