@@ -22,7 +22,7 @@ const SidebarItem = ({ title, isActive, onClick }) => (
 
 const DashLayout = () => {
   // State to manage the active section
-  const [activeSection, setActiveSection] = useState('Guide Request');
+  const [activeSection, setActiveSection] = useState('Customer');
 
   // Function to render content based on active section
   const renderContent = () => {
@@ -63,7 +63,7 @@ const DashLayout = () => {
         
         {/* Menu Items */}
         <nav className='flex-1 flex flex-col space-y-2 mr-[-1px]'>
-            {['Customer', 'Guide Request', 'Manage Guide', 'Add Package', 'View All Package', 'Add Guide'].map((item) => (
+            {['Customer', 'Guide Request', 'Manage Guide',, 'Add Guide', 'Add Package', 'View All Package'].map((item) => (
                 <SidebarItem 
                     key={item}
                     title={item} 
