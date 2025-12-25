@@ -12,7 +12,7 @@ const GuideRequest = () => {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuideRequest`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuideRequest`,{withCredentials:true});
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];
         setRequests(data);
         setLoading(false);
@@ -29,7 +29,7 @@ const GuideRequest = () => {
   const handleMarkVisited = async (id) => {
     try {
         // 1. Send PATCH request
-        await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/guide-request/mark-visited/${id}`);
+        await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/guide-request/mark-visited/${id}`,{},{withCredentials:true});
         
         // 2. Update Local State (Optimistic UI Update)
         setRequests(prevRequests => 

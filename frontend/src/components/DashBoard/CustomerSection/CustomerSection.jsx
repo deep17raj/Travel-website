@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomerRequestCard from './CustomerRequestCard';
-import.meta.env.VITE_API_URL
+
 const CustomerSection = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,12 +12,18 @@ const CustomerSection = () => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/all-customer`);
+        // UPDATED: Added { withCredentials: true } to the configuration object
+        const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/api/v1/get/all-customer`,
+            { withCredentials: true } 
+        );
+        
         const data = Array.isArray(response.data) ? response.data : response.data.data || [];
         setCustomers(data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching customers:", error);
+        // Optional: Handle 401/403 unauthorized errors here if needed
         setLoading(false);
       }
     };
@@ -28,8 +34,13 @@ const CustomerSection = () => {
   // --- Handle Mark Visited (API Call) ---
   const handleMarkVisited = async (id) => {
     try {
+        // UPDATED: Added empty object {} as 2nd arg, and config as 3rd arg
         // 1. Send PATCH request to backend
-        await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/customer-request/mark-visited/${id}`);
+        await axios.patch(
+            `${import.meta.env.VITE_API_URL}/api/v1/customer-request/mark-visited/${id}`,
+            {}, // <--- IMPORTANT: Empty body object is required before config
+            { withCredentials: true } // <--- Config goes here
+        );
         
         // 2. Update Local State (Optimistic UI update)
         setCustomers(prevCustomers => 

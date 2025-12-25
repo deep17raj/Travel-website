@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Search, Phone, MapPin, User, Edit2, Briefcase } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import.meta.env.VITE_API_URL
+
 // --- Sub-Component: Individual Guide Card ---
 const GuideCard = ({ guide, onToggleStatus, onEdit }) => {
     return (
@@ -85,17 +85,26 @@ const ManageGuide = () => {
         const fetchGuides = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuide`);
+                // ADDED: { withCredentials: true } to send cookies for requireAdmin
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/api/v1/get/allGuide`,
+                    { withCredentials: true }
+                );
+                
                 const data = Array.isArray(response.data) ? response.data : response.data.data || [];
                 setGuides(data);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching guides:", error);
+                // Optional: Redirect to login if unauthorized (401)
+                if (error.response && error.response.status === 401) {
+                    navigate('/admin/login');
+                }
                 setLoading(false);
             }
         };
         fetchGuides();
-    }, []);
+    }, [navigate]);
 
     // --- Toggle Status Handler ---
     const handleToggleStatus = async (guideId, currentStatus) => {
@@ -110,13 +119,22 @@ const ManageGuide = () => {
 
         try {
             // 2. Send API Request using guideId in URL
-            await axios.patch(`${import.meta.env.VITE_API_URL}/api/v1/modify/guide/${guideId}`, {
-                engage: newStatus
-            });
+            // ADDED: { withCredentials: true } here as well
+            await axios.patch(
+                `${import.meta.env.VITE_API_URL}/api/v1/modify/guide/${guideId}`, 
+                { engage: newStatus },
+                { withCredentials: true } 
+            );
             console.log(`Guide ${guideId} status updated to ${newStatus}`);
         } catch (error) {
             console.error("Failed to update status:", error);
             alert("Failed to update status. Please try again.");
+            
+            // Redirect if session expired
+            if (error.response && error.response.status === 401) {
+                navigate('/admin/login');
+            }
+
             // 3. Rollback UI
             setGuides((prevGuides) =>
                 prevGuides.map((guide) =>

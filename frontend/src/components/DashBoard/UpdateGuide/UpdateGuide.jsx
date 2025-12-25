@@ -23,18 +23,28 @@ const UpdateGuide = () => {
     const [isLoadingData, setIsLoadingData] = useState(true);
 
     // --- FETCH EXISTING DATA ---
+    // --- FETCH EXISTING DATA ---
     useEffect(() => {
         const fetchGuideData = async () => {
             try {
-                // Fetch all guides and find the one matching the ID
-                // (Ideally, backend should have a get-by-id route, but this works with your current setup)
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/allGuide`);
-                
-                const guides = response.data.data || response.data;
-                const guideToEdit = guides.find((g) => g.guideId === id);
+                // OLD WAY: Fetch all and filter (BAD)
+                // const response = await axios.get(.../allGuide);
+                // const guideToEdit = guides.find(...)
+
+                // NEW WAY: Fetch specific ID directly (GOOD)
+                // We pass the 'id' from useParams directly into the URL
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/api/v1/get/guide/${id}`,
+                    { withCredentials: true } // Required because of 'requireAdmin' middleware
+                );
+
+                // Depending on your backend, the data might be in response.data or response.data.data
+                // We expect a single object, not an array
+                const guideToEdit = response.data.data || response.data;
 
                 if (guideToEdit) {
                     setFormData({
+                        // Use optional chaining (?.) just in case a field is missing
                         guideName: guideToEdit.guideName || "",
                         guideId: guideToEdit.guideId || "",
                         guideEmail: guideToEdit.guideEmail || "",
@@ -54,7 +64,9 @@ const UpdateGuide = () => {
             }
         };
 
-        fetchGuideData();
+        if (id) {
+            fetchGuideData();
+        }
     }, [id]);
 
     const handleChange = (e) => {
@@ -103,13 +115,13 @@ const UpdateGuide = () => {
                 // --- PATCH REQUEST ---
                 await axios.patch(
                     `${import.meta.env.VITE_API_URL}/api/v1/modify/guide/${id}`,
-                    payload
+                    payload,{withCredentials:true}
                 );
 
                 setStatusMessage("Guide updated successfully!");
                 
                 // Optional: Navigate back after short delay
-                setTimeout(() => navigate('/dashboard'), 500);
+                setTimeout(() => navigate('/dashboard'), 1500);
 
             } catch (error) {
                 console.error("Error updating guide:", error);

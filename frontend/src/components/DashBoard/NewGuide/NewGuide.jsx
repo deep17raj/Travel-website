@@ -46,7 +46,7 @@ const NewGuide = () => {
                 if (!payload.guidePhoneNo2 || payload.guidePhoneNo2.trim() === "") delete payload.guidePhoneNo2;
 
                 // --- POST REQUEST ---
-                await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/create/new/guide`, payload);
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/create/new/guide`, payload,{withCredentials:true});
 
                 setSubmitSuccess("Guide created successfully!");
                 setFormData({

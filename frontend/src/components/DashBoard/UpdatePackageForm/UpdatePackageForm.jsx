@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Upload, Image as ImageIcon } from 'lucide-react';
 
 const UpdatePackageForm = () => {
-  const { id } = useParams(); // Get Package ID from URL
+  const { id } = useParams(); 
   const navigate = useNavigate();
 
   // 1. Static Data State
@@ -20,7 +20,6 @@ const UpdatePackageForm = () => {
 
   // 3. Dynamic Sections State
   const [sections, setSections] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,13 +44,12 @@ const UpdatePackageForm = () => {
         }
 
         // Populate Sections
-        // Map backend sections to frontend structure. Note: backend uses 'imageUrl', frontend expects 'preview' for display
         const mappedSections = (data.sections || []).map(sec => ({
+          _id: sec._id, // IMPORTANT: Keep the ID to update specific sub-docs if needed
           heading: sec.heading,
           description: sec.description,
-          image: null, // No file initially
-          preview: sec.imageUrl || null, // Existing URL
-          image_id: sec.image_id // Keep track of existing image ID if needed
+          image: null, // No new file initially
+          preview: sec.imageUrl || null, // Display existing URL
         }));
 
         setSections(mappedSections.length > 0 ? mappedSections : [{ heading: '', description: '', image: null, preview: null }]);
@@ -69,8 +67,7 @@ const UpdatePackageForm = () => {
     }
   }, [id]);
 
-
-  // --- Handlers for Static Fields ---
+  // --- Handlers ---
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -84,7 +81,6 @@ const UpdatePackageForm = () => {
     }
   };
 
-  // --- Handlers for Dynamic Sections ---
   const handleSectionChange = (index, field, value) => {
     const updatedSections = [...sections];
     updatedSections[index][field] = value;
@@ -109,12 +105,10 @@ const UpdatePackageForm = () => {
     if (sections.length > 1) {
       const updatedSections = sections.filter((_, i) => i !== index);
       setSections(updatedSections);
-    } else {
-      setSections([{ heading: '', description: '', image: null, preview: null }]);
     }
   };
 
-  // --- Submission Handler (UPDATE) ---
+  // --- Submission Handler (FIXED) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -132,49 +126,45 @@ const UpdatePackageForm = () => {
         data.append('mainImage', mainImage);
       }
 
-      // 3. Prepare Sections Data
-      // IMPORTANT: For updates, backend might need to know which sections kept their old images.
-      // Usually, you send the text data JSON, and backend logic handles preserving old images if new ones aren't sent.
-      // Or you might need to send the old 'imageUrl' back in the JSON if your backend supports that.
+      // 3. Prepare Sections Payload
+      const sectionsPayload = sections.map(sec => {
+        // Detect if the user picked a new file (blob:) or kept the old URL (http...)
+        const isNewFile = sec.preview?.startsWith('blob:');
+
+        return {
+          _id: sec._id, // Pass ID back so backend knows which section this is
+          heading: sec.heading,
+          description: sec.description,
+          // If it's a new file, send null (backend will look in req.files)
+          // If it's an old URL, send it back (backend will keep it)
+          imageUrl: isNewFile ? null : sec.preview 
+        };
+      });
       
-      const sectionsPayload = sections.map(sec => ({
-        heading: sec.heading,
-        description: sec.description,
-        // Send back the old image URL/ID so backend knows to keep it if no new file is uploaded
-        // This depends on your specific backend implementation. 
-        // If your backend completely replaces sections, you MUST send back the old image URL/ID here.
-        imageUrl: sec.preview?.startsWith('blob:') ? null : sec.preview, 
-        image_id: sec.image_id
-      }));
-      
+      // Stringify the array for the backend to parse
       data.append('sections', JSON.stringify(sectionsPayload));
 
-      // 4. Append New Section Images
+      // 4. Append New Section Images (Files)
       sections.forEach((sec, index) => {
         if (sec.image) {
-          // Key must match what backend expects for that index
+          // The key 'sectionImage_0', 'sectionImage_1' matches our backend logic
           data.append(`sectionImage_${index}`, sec.image);
         }
       });
 
-      // 5. Send PATCH Request
+      // 5. Send Request
       const response = await axios.patch(
         `${import.meta.env.VITE_API_URL}/api/v1/modify/package/${id}`, 
-        data, 
+        data,{withCredentials:true},
         {
             headers: { 
                 'Content-Type': 'multipart/form-data',
-                // Add Authorization header if needed
-                // 'Authorization': `Bearer ${token}` 
             }
         }
       );
 
       alert('Package updated successfully!');
-      console.log("Update Response:", response.data);
-      
-      // Optional: Navigate back or refresh
-      // navigate('/dashboard/packages');
+      navigate(-1); // Go back to previous page
 
     } catch (error) {
       console.error('Error updating package:', error);
@@ -221,13 +211,13 @@ const UpdatePackageForm = () => {
                 <div className="mt-2 w-full h-48 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 relative group">
                     <img src={mainImagePreview} alt="Preview" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center text-white text-sm">
-                        Current Image
+                        Click above to change
                     </div>
                 </div>
             )}
           </div>
 
-          {/* --- Package Name --- */}
+          {/* --- Text Inputs --- */}
           <input
             type="text"
             name="packageName"
@@ -238,7 +228,6 @@ const UpdatePackageForm = () => {
             required
           />
 
-          {/* --- Display Text --- */}
           <input
             type="text"
             name="displayText"
@@ -249,7 +238,7 @@ const UpdatePackageForm = () => {
             required
           />
 
-          {/* --- Category Dropdown --- */}
+          {/* --- Category --- */}
           <div className="relative">
             <select
               name="packageCategory"
@@ -280,30 +269,28 @@ const UpdatePackageForm = () => {
               {sections.map((section, index) => (
                 <div key={index} className="flex flex-col gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200 animate-fadeIn">
                   
-                  {/* Section Header */}
+                  {/* Header */}
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-bold text-gray-500 uppercase">Section {index + 1}</span>
                     <button
                       type="button"
                       onClick={() => removeSection(index)}
                       className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors"
-                      title="Remove Section"
                     >
                       <Trash2 size={20} />
                     </button>
                   </div>
 
-                  {/* Heading Input */}
+                  {/* Inputs */}
                   <input
                     type="text"
-                    placeholder="Section Heading (e.g., Day 1)"
+                    placeholder="Section Heading"
                     value={section.heading}
                     onChange={(e) => handleSectionChange(index, 'heading', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#5937E0] outline-none"
                     required
                   />
 
-                  {/* Description Input */}
                   <textarea
                     placeholder="Section description"
                     value={section.description}
@@ -313,7 +300,7 @@ const UpdatePackageForm = () => {
                     required
                   ></textarea>
 
-                  {/* Section Image Upload */}
+                  {/* Image Upload */}
                   <div className="flex items-center gap-4">
                       <label className="flex items-center gap-2 cursor-pointer bg-white border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                           <ImageIcon size={18} className="text-gray-600"/>
@@ -328,24 +315,23 @@ const UpdatePackageForm = () => {
                           />
                       </label>
                       
-                      {/* Section Image Preview */}
                       {section.preview && (
                           <div className="h-16 w-24 rounded-lg overflow-hidden border border-gray-300 bg-gray-200">
-                              <img src={section.preview} alt="Sec Preview" className="w-full h-full object-cover" />
+                              <img src={section.preview} alt="Preview" className="w-full h-full object-cover" />
                           </div>
                       )}
                   </div>
 
-                  {/* Add Button (Only on last item) */}
+                  {/* Add Button */}
                   {index === sections.length - 1 && (
                     <div className="flex justify-end mt-2">
-                         <button
+                          <button
                             type="button"
                             onClick={addSection}
                             className="flex items-center gap-2 bg-[#5937E0] text-white px-4 py-2 rounded-lg hover:bg-[#452ab8] transition-colors shadow-sm"
-                         >
+                          >
                             <Plus size={18} /> Add Next Section
-                         </button>
+                          </button>
                     </div>
                   )}
 
@@ -354,11 +340,11 @@ const UpdatePackageForm = () => {
             </div>
           </div>
 
-          {/* --- Action Buttons --- */}
+          {/* --- Footer Buttons --- */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-10 pb-10">
             <button
               type="button"
-              onClick={() => navigate(-1)} // Go back
+              onClick={() => navigate(-1)}
               className="w-full sm:w-auto px-10 py-3 bg-gray-100 text-gray-700 font-semibold text-lg rounded-full hover:bg-gray-200 transition-colors"
             >
               Cancel

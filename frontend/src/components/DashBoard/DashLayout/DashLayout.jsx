@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import GuideRequests from '../GuideRequest/GuideRequest';
-import CustomerSection from '../CustomerSection/CustomerSection';
-import NewGuide from '../NewGuide/NewGuide';
-import AddPackageForm from '../Packagess/AddPackageForm';
-import ViewAllPackages from '../ViewAllPackages/ViewAllPackages';
-import ManageGuide from '../ManageGuide/ManageGuide';
+import React from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'; // Import router hooks
 
-// A simple sidebar item component
+// Sidebar Item Component
 const SidebarItem = ({ title, isActive, onClick }) => (
   <div
     className={`px-8 py-4 cursor-pointer font-semibold text-lg transition-all duration-300 ${
@@ -15,40 +10,30 @@ const SidebarItem = ({ title, isActive, onClick }) => (
     onClick={onClick}
   >
     {title}
-    {/* Overlap effect for active item */}
     {isActive && <div className="absolute right-0 top-0 bottom-0 w-10 bg-[#F5F5F5] translate-x-1/2"></div>}
   </div>
 );
 
 const DashLayout = () => {
-  // State to manage the active section
-  const [activeSection, setActiveSection] = useState('Customer');
+  const navigate = useNavigate();
+  const location = useLocation(); // Used to check active path for styling
 
-  // Function to render content based on active section
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'Guide Request':
-        return <GuideRequests />;
-      case 'Customer':
-        return <CustomerSection/>;
-      case 'Add Guide':
-        return <NewGuide/>;
-      case 'Add Package':
-        return <AddPackageForm/>;
-      case 'View All Package':
-        return <ViewAllPackages/>;
-      case 'Manage Guide':
-        return <ManageGuide/>;
-      // Placeholder for other sections
-      default:
-        return <div className="p-12 text-3xl font-bold text-gray-400 flex h-full items-center justify-center">{activeSection} Section Coming Soon</div>;
-    }
-  };
+  // Map your menu labels to specific routes
+  const menuItems = [
+    { label: 'Customer', path: '/dashboard' }, // Default route
+    { label: 'Guide Request', path: '/dashboard/guide-requests' },
+    { label: 'Manage Guide', path: '/dashboard/manage-guide' },
+    { label: 'Add Guide', path: '/dashboard/add-guide' },
+    { label: 'Add Package', path: '/dashboard/add-package' },
+    { label: 'View All Package', path: '/dashboard/view-packages' }
+  ];
 
   return (
     <div className="flex h-screen bg-[#121212] font-sans overflow-hidden">
+      
       {/* --- SIDEBAR --- */}
       <div className="w-72 flex flex-col py-12 space-y-4 flex-shrink-0 z-10">
+        
         {/* Logo */}
         <div className="px-8 mb-12">
           <div className="flex items-center gap-3">
@@ -63,20 +48,31 @@ const DashLayout = () => {
         
         {/* Menu Items */}
         <nav className='flex-1 flex flex-col space-y-2 mr-[-1px]'>
-            {['Customer', 'Guide Request', 'Manage Guide',, 'Add Guide', 'Add Package', 'View All Package'].map((item) => (
-                <SidebarItem 
-                    key={item}
-                    title={item} 
-                    isActive={activeSection === item} 
-                    onClick={() => setActiveSection(item)} 
-                />
-            ))}
+            {menuItems.map((item) => {
+                // Check if this is the active route for styling
+                // For exact matches (like dashboard root), use strict equality. For sub-routes, use includes.
+                const isActive = item.path === '/dashboard' 
+                    ? location.pathname === '/dashboard'
+                    : location.pathname.includes(item.path);
+
+                return (
+                  <SidebarItem 
+                      key={item.label}
+                      title={item.label} 
+                      isActive={isActive} 
+                      onClick={() => navigate(item.path)} // Navigate instead of setState
+                  />
+                );
+            })}
         </nav>
       </div>
 
       {/* --- MAIN CONTENT AREA --- */}
       <div className="flex-1 bg-[#F5F5F5] rounded-l-[50px] overflow-y-auto relative z-0 shadow-[-20px_0_40px_rgba(0,0,0,0.2)]">
-        {renderContent()}
+        
+        {/* THIS IS WHERE THE CHILD ROUTES RENDER */}
+        <Outlet />
+
       </div>
     </div>
   );
