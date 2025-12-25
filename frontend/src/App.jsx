@@ -42,10 +42,8 @@ function App() {
       <div className="relative z-0">
          <Routes>
           <Route path='/' element={<HomePage/>}/>
-          <Route path='/requestGuide' element={<GuideForm/>}/>
           <Route path='/about' element={<MainAboutUs/>}/>
           <Route path='/packages' element={<SeeAll/>}/>
-          <Route path='/requestGuide' element={<GuideForm/>}/>
           <Route path='/blog/:id' element={<Blog/>}/>
           <Route path='/dashboard' element={<DashLayout/>}/>
           <Route path="/dashboard/edit-guide/:id" element={<UpdateGuide/>} />

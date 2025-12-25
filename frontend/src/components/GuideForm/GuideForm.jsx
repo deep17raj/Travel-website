@@ -132,7 +132,7 @@ function GuideForm({ isOpen, onClose = () => {} }) {
         {/* --- CONTENT --- */}
         <div className="p-8 md:p-10 z-10">
           <h2 className="text-2xl md:text-3xl font-normal mb-6 text-center text-[#F411CF]">
-            Get a free tour plan
+            Become a Guide
           </h2>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
