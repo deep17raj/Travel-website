@@ -24,7 +24,7 @@ function NavBar() {
                         <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                         </div>
-                        <span className="font-bold text-[22px] text-[#1C1C1C]">Travelo</span>
+                        <span className="font-bold text-[22px] text-[#1C1C1C]">Satotra</span>
                     </Link>
                 </div>
 

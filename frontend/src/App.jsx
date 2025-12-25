@@ -45,7 +45,7 @@ function App() {
           <Route path='/about' element={<MainAboutUs/>}/>
           <Route path='/packages' element={<SeeAll/>}/>
           <Route path='/requestGuide' element={<GuideForm/>}/>
-          <Route path='/blog' element={<Blog/>}/>
+          <Route path='/blog/:id' element={<Blog/>}/>
           <Route path='/dashboard' element={<DashLayout/>}/>
           <Route path="/dashboard/edit-guide/:id" element={<UpdateGuide/>} />
           

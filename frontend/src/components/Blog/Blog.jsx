@@ -1,31 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom"; // 1. Import useParams
 import { Phone } from "lucide-react"; 
 
 // Ensure these paths match your project structure
-import Pic1 from "../../assets/BlogPic.svg";
 import Map from "../../assets/Form/Map.svg";
 import Plane1 from "../../assets/Form/Plane1.svg";
 import Ecp1 from "../../assets/Form/Ecp1.svg";
 import Ecp2 from "../../assets/Form/Ecp2.svg";
 import Ecp3 from "../../assets/Form/Ecp3.svg";
-import.meta.env.VITE_API_URL
-
+import { handleCall } from "../../utils/contactHelper";
 
 function Blog() {
-  // 1. Updated state keys to match Mongoose Schema
+  const { id } = useParams(); // 2. Get ID from URL
+  const [packageData, setPackageData] = useState(null);
+  const [loadingData, setLoadingData] = useState(true);
+
+  // Form State
   const [form, setForm] = useState({
     customerName: "",
     customerPhoneNo: "",
     customerEmail: "",
-    travelDestination: "",
+    travelDestination: "", // Will be pre-filled
     travelDate: "",
     totalNoOfPersons: "",
   });
-
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingForm, setLoadingForm] = useState(false);
   const [success, setSuccess] = useState("");
+
+  // Reusable input style class
+  const inputClasses = "w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] transition-all";
+
+  // --- 3. Fetch Specific Package Data ---
+  useEffect(() => {
+    const fetchPackageDetail = async () => {
+      if (!id) return;
+      try {
+        setLoadingData(true);
+        // Using the route provided: /v1/get/detail/:packageId
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/get/detail/${id}`);
+        
+        const data = res.data.data || res.data; // Adjust based on your backend response structure
+        setPackageData(data);
+        
+        // Auto-fill destination in form if data loads
+        if (data && data.packageName) {
+            setForm(prev => ({ ...prev, travelDestination: data.packageName }));
+        }
+        
+        setLoadingData(false);
+      } catch (err) {
+        console.error("Error fetching package details:", err);
+        setLoadingData(false);
+      }
+    };
+
+    fetchPackageDetail();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,21 +68,12 @@ function Blog() {
     e.preventDefault();
     const personsInt = parseInt(form.totalNoOfPersons, 10) || 0;
 
-    // 2. Updated Validation Logic
-    if (
-      !form.customerName.trim() ||
-      !form.customerPhoneNo.trim() ||
-      !form.customerEmail.trim() ||
-      !form.travelDestination.trim() ||
-      !form.travelDate ||
-      personsInt <= 0
-    ) {
+    if (!form.customerName.trim() || !form.customerPhoneNo.trim() || !form.customerEmail.trim() || !form.travelDestination.trim() || !form.travelDate || personsInt <= 0) {
       setError("Please fill all fields correctly.");
       setSuccess("");
       return;
     }
 
-    // Phone length validation (Schema requires min/max 10)
     if (form.customerPhoneNo.length !== 10) {
         setError("Phone number must be exactly 10 digits.");
         setSuccess("");
@@ -58,35 +81,30 @@ function Blog() {
     }
 
     setError("");
-    setLoading(true);
+    setLoadingForm(true);
 
     try {
-      // 3. Payload matching schema types
       const payload = { ...form, totalNoOfPersons: personsInt };
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/customer/details`, payload);
       
-      console.log("Sending Payload:", payload);
-      
-      // Replace with your actual API endpoint
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/save/customer/details`, payload);
-      console.log("Response:", res.data);
-
-      setForm({
-        customerName: "",
-        customerPhoneNo: "",
-        customerEmail: "",
-        travelDestination: "",
-        travelDate: "",
-        totalNoOfPersons: "",
-      });
+      setForm({ customerName: "", customerPhoneNo: "", customerEmail: "", travelDestination: packageData?.packageName || "", travelDate: "", totalNoOfPersons: "" });
       setSuccess("Request sent successfully!");
     } catch (err) {
       console.error(err);
       setError("Failed to submit. Try again.");
       setSuccess("");
     } finally {
-      setLoading(false);
+      setLoadingForm(false);
     }
   };
+
+  if (loadingData) {
+      return <div className="w-full h-screen flex justify-center items-center text-[#5C15B8] text-xl font-bold">Loading Package Details...</div>;
+  }
+
+  if (!packageData) {
+      return <div className="w-full h-screen flex justify-center items-center text-red-500">Package not found.</div>;
+  }
 
   return (
     <section className="w-full pb-20 pt-4">
@@ -95,8 +113,9 @@ function Blog() {
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-[2rem] overflow-hidden shadow-lg mb-8">
           <img 
-            src={Pic1} 
-            alt="Rishikesh Landscape" 
+            // Use fetched image or fallback
+            src={packageData.imageUrl || "https://via.placeholder.com/1200x500?text=No+Image"} 
+            alt={packageData.packageName} 
             className="w-full h-full object-cover" 
           />
         </div>
@@ -104,7 +123,7 @@ function Blog() {
         {/* Action Buttons Row */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12">
            {/* Call Button */}
-          <button className="flex items-center gap-3 text-[#5C15B8] hover:text-[#4a1094] transition-colors group">
+          <button onClick={() => handleCall('+971501234567')} className="flex items-center gap-3 text-[#5C15B8] hover:text-[#4a1094] transition-colors group">
             <div className="p-2 bg-purple-50 rounded-full group-hover:bg-purple-100 transition-colors">
                <Phone size={20} className="stroke-current" />
             </div>
@@ -112,7 +131,7 @@ function Blog() {
           </button>
 
           {/* Contact Button */}
-          <button className="bg-[#5C15B8] hover:bg-[#4a1094] text-white px-8 py-3 rounded-full font-medium shadow-lg shadow-purple-200 transition-all hover:scale-105">
+          <button onClick={() => handleCall('+971501234567')} className="bg-[#5C15B8] hover:bg-[#4a1094] text-white px-8 py-3 rounded-full font-medium shadow-lg shadow-purple-200 transition-all hover:scale-105">
             Contact Now
           </button>
         </div>
@@ -120,32 +139,39 @@ function Blog() {
         {/* --- CONTENT & FORM GRID --- */}
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           
-          {/* LEFT: Blog Text Content */}
+          {/* LEFT: Dynamic Text Content */}
           <div className="w-full lg:w-[55%] flex flex-col gap-10 text-[#1C1C1C]">
             
-            {/* Section 1 */}
+            {/* Package Header */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">Rishikesh</h1>
+              <h1 className="text-3xl md:text-4xl font-bold mb-4">{packageData.packageName}</h1>
               <p className="text-gray-600 text-lg leading-relaxed">
-                Rishikesh, known as the "Yoga Capital of the World," is a serene town nestled in the foothills of the Himalayas along the banks of the sacred Ganges River. It attracts spiritual seekers, adventure enthusiasts, and nature lovers alike.
+                {packageData.displayText}
               </p>
             </div>
 
-            {/* Section 2 */}
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Where spirituality flows with the Ganga</h2>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                The evening Ganga Aarti at Triveni Ghat is a mesmerizing spiritual experience, where lamps float on the river, creating a golden aura. Beyond spirituality, Rishikesh is famous for its iconic suspension bridges, Ram Jhula and Lakshman Jhula.
-              </p>
-            </div>
+            {/* Dynamic Sections Loop */}
+            {packageData.sections && packageData.sections.length > 0 ? (
+                packageData.sections.map((section, index) => (
+                    <div key={index}>
+                        <h2 className="text-2xl md:text-3xl font-bold mb-4">{section.heading}</h2>
+                        <p className="text-gray-600 text-lg leading-relaxed">
+                            {section.description}
+                        </p>
+                        {/* Show section image if exists */}
+                        {section.imageUrl && (
+                            <img 
+                                src={section.imageUrl} 
+                                alt={section.heading} 
+                                className="mt-4 rounded-xl w-full h-64 object-cover shadow-sm" 
+                            />
+                        )}
+                    </div>
+                ))
+            ) : (
+                <p>No itinerary details available.</p>
+            )}
 
-            {/* Section 3 */}
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">A sanctuary of spirituality</h2>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                For adventure seekers, it offers white-water rafting, bungee jumping, and trekking trails. Whether you seek inner peace at an ashram or an adrenaline rush on the rapids, Rishikesh promises an unforgettable journey.
-              </p>
-            </div>
           </div>
 
           {/* RIGHT: "Get a free tour plan" Form Card */}
@@ -169,9 +195,8 @@ function Blog() {
                   {error && <div className="text-red-500 text-center text-sm bg-red-50 p-2 rounded-lg">{error}</div>}
                   {success && <div className="text-green-600 text-center text-sm bg-green-50 p-2 rounded-lg">{success}</div>}
 
-                  {/* Customer Name */}
                   <input
-                    className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
+                    className={inputClasses}
                     type="text"
                     name="customerName"
                     placeholder="Name"
@@ -179,9 +204,8 @@ function Blog() {
                     onChange={handleChange}
                   />
 
-                  {/* Customer Phone */}
                   <input
-                    className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
+                    className={inputClasses}
                     type="tel"
                     name="customerPhoneNo"
                     placeholder="Mobile Number (10 digits)"
@@ -190,9 +214,8 @@ function Blog() {
                     onChange={handleChange}
                   />
 
-                  {/* Customer Email */}
                   <input
-                    className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
+                    className={inputClasses}
                     type="email"
                     name="customerEmail"
                     placeholder="Email"
@@ -200,9 +223,8 @@ function Blog() {
                     onChange={handleChange}
                   />
 
-                  {/* Travel Destination */}
                   <input
-                    className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
+                    className={inputClasses}
                     type="text"
                     name="travelDestination"
                     placeholder="Destination"
@@ -211,18 +233,16 @@ function Blog() {
                   />
 
                   <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Travel Date */}
                     <input
-                      className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
+                      className={inputClasses}
                       type="date"
                       name="travelDate"
                       value={form.travelDate}
                       onChange={handleChange}
                     />
                     
-                    {/* Total Persons */}
                     <input
-                      className="w-full bg-white border border-gray-200 rounded-2xl px-5 py-3 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#F411CF] focus:ring-1 focus:ring-[#F411CF] transition-all"
+                      className={inputClasses}
                       type="number"
                       name="totalNoOfPersons"
                       min="1"
@@ -235,10 +255,10 @@ function Blog() {
                   <div className="flex justify-center mt-4">
                     <button
                       type="submit"
-                      disabled={loading}
+                      disabled={loadingForm}
                       className="bg-[#5C15B8] hover:bg-[#4a1094] text-white px-12 py-3.5 rounded-full font-semibold shadow-lg shadow-purple-200 transition-all hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      {loading ? "Submitting..." : "Submit Request"}
+                      {loadingForm ? "Submitting..." : "Submit Request"}
                     </button>
                   </div>
                 </form>

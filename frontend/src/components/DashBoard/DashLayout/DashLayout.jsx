@@ -57,7 +57,7 @@ const DashLayout = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
               </div>
-              <h2 className="text-3xl font-bold text-white tracking-tight">Travelo</h2>
+              <h2 className="text-3xl font-bold text-white tracking-tight">Satotra</h2>
           </div>
         </div>
         

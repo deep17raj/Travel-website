@@ -21,7 +21,7 @@ function AboutUs() {
                             <div className="absolute top-1 w-3 h-2 border-2 border-white border-b-0 rounded-t-full"></div>
                             <div className="absolute w-1 h-1 bg-white rounded-full"></div>
                         </div>
-                        <h2 className="text-2xl font-bold text-black tracking-tight">Travelo</h2>
+                        <h2 className="text-2xl font-bold text-black tracking-tight">Satotra</h2>
                     </div>
 
                     {/* Description */}

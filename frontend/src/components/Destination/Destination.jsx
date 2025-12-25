@@ -5,9 +5,9 @@ import { Phone, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper modules
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
+import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
 import Pic1 from "../../assets/Pic1.svg"; // Fallback image
 import { handleCall } from '../../utils/contactHelper';
-import.meta.env.VITE_API_URL
 
 // Import Swiper styles
 import 'swiper/css';
@@ -18,6 +18,7 @@ export default function DestinationCarousel() {
   const swiperRef = useRef(null);
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // 2. Initialize navigate hook
 
   // --- Fetch Data from Backend ---
   useEffect(() => {
@@ -39,6 +40,11 @@ export default function DestinationCarousel() {
 
     fetchDestinations();
   }, []);
+
+  // 3. Navigation Handler
+  const handleReadMore = (id) => {
+    navigate(`/blog/${id}`);
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-12 anime">
@@ -137,7 +143,11 @@ export default function DestinationCarousel() {
                         <span>Call for Pricing</span>
                     </button>
 
-                    <button className="bg-[#1a73e8] hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-colors shadow-md shadow-blue-200">
+                    {/* 4. Updated Button with onClick Handler */}
+                    <button 
+                        onClick={() => handleReadMore(item.blogId)}
+                        className="bg-[#1a73e8] hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-colors shadow-md shadow-blue-200"
+                    >
                         Read More
                     </button>
                     </div>
