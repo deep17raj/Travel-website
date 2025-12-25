@@ -10,6 +10,7 @@ import Ecp1 from "../../assets/Form/Ecp1.svg";
 import Ecp2 from "../../assets/Form/Ecp2.svg";
 import Ecp3 from "../../assets/Form/Ecp3.svg";
 import { handleCall } from "../../utils/contactHelper";
+import NavBar from "../NavBar/NavBar";
 
 function Blog() {
   const { id } = useParams(); // 2. Get ID from URL
@@ -108,7 +109,8 @@ function Blog() {
 
   return (
     <section className="w-full pb-20 pt-4">
-      
+      <NavBar/>
+      <div className="my-4"></div>
       {/* --- HERO IMAGE SECTION --- */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-[2rem] overflow-hidden shadow-lg mb-8">

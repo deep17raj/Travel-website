@@ -11,7 +11,7 @@ function NavBar() {
         { name: "Home", path: "/" },
         { name: "About Us", path: "/about" },
         { name: "Discover", path: "/packages" }, // Assuming Discover links to packages
-        { name: "Blog", path: "/blog" },
+        { name: "Contact us", path: "/blog" },
     ];
 
     return (

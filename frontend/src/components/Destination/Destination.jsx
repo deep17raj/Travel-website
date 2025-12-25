@@ -53,7 +53,7 @@ export default function DestinationCarousel() {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         {/* Title Section */}
         <div>
-          <h3 className="text-[#427a18] font-bold uppercase tracking-widest text-sm mb-2">
+          <h3 className="text-[#427a18] font-bold uppercase tracking-widest text-lg mb-2">
             Top Destination
           </h3>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
@@ -105,7 +105,7 @@ export default function DestinationCarousel() {
                 <div className="bg-white rounded-[2rem] shadow-lg overflow-hidden border border-gray-100 h-full flex flex-col hover:shadow-xl transition-shadow duration-300">
                 
                 {/* Image Section */}
-                <div className="relative h-64 w-full">
+                <div className="relative h-80 w-full">
                     <img
                     // Use backend image, fallback to Pic1 if missing
                     src={item.imageUrl || Pic1}

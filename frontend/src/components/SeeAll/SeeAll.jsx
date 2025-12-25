@@ -6,45 +6,61 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper/modules';
+import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
 import NavBar from '../NavBar/NavBar';
 import { handleCall } from '../../utils/contactHelper';
-import.meta.env.VITE_API_URL
 
 // --- CARD COMPONENT ---
-const PackageCard = ({ item }) => (
-  <div className="bg-white rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden border border-gray-100 mx-2 mb-10 mt-2">
-    {/* Image */}
-    <div className="h-56 w-full relative">
-      <img 
-        src={item.imageUrl || "https://via.placeholder.com/600x400?text=No+Image"} 
-        alt={item.packageName} 
-        className="w-full h-full object-cover" 
-      />
-      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-700 shadow-sm">
-         FEATURED
-      </div>
-    </div>
-    
-    {/* Content */}
-    <div className="p-6 flex flex-col flex-grow">
-      <h3 className="font-bold text-xl text-gray-900 mb-2">{item.packageName}</h3>
-      <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-2">
-        {item.displayText || "Explore this amazing package."}
-      </p>
-      
-      <div className="flex-grow"></div>
+// 2. Updated to use navigation hook
+const PackageCard = ({ item }) => {
+  const navigate = useNavigate(); // Initialize hook
 
-      <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-          <span onClick={() => handleCall('+971501234567')} className="text-xs font-bold text-[#8B5CF6] uppercase tracking-wider cursor-pointer hover:text-[#7c3aed]">
-              Call for Pricing
-          </span>
-          <button className="bg-[#8B5CF6] hover:bg-[#7c3aed] text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-colors shadow-lg shadow-purple-100">
-              Read More
-          </button>
+  const handleReadMore = () => {
+    // Navigate to blog page with specific ID
+    navigate(`/blog/${item.blogId}`);
+  };
+
+  return (
+    <div className="bg-white rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden border border-gray-100 mx-2 mb-10 mt-2">
+      {/* Image */}
+      <div className="h-56 w-full relative">
+        <img 
+          src={item.imageUrl || "https://via.placeholder.com/600x400?text=No+Image"} 
+          alt={item.packageName} 
+          className="w-full h-full object-cover" 
+        />
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-700 shadow-sm">
+           FEATURED
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="p-6 flex flex-col flex-grow">
+        <h3 className="font-bold text-xl text-gray-900 mb-2">{item.packageName}</h3>
+        <p className="text-gray-500 text-sm mb-4 leading-relaxed line-clamp-2">
+          {item.displayText || "Explore this amazing package."}
+        </p>
+        
+        <div className="flex-grow"></div>
+
+        <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+            <span 
+                onClick={() => handleCall('+971501234567')} 
+                className="text-xs font-bold text-[#8B5CF6] uppercase tracking-wider cursor-pointer hover:text-[#7c3aed]"
+            >
+                Call for Pricing
+            </span>
+            <button 
+                onClick={handleReadMore} // Attach handler here
+                className="bg-[#8B5CF6] hover:bg-[#7c3aed] text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-colors shadow-lg shadow-purple-100"
+            >
+                Read More
+            </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // --- SECTION WRAPPER (Swiper Implementation) ---
 const PackageSection = ({ categoryTitle, data }) => {
@@ -88,7 +104,7 @@ const PackageSection = ({ categoryTitle, data }) => {
         onSwiper={setSwiperRef}
         slidesPerView={1}
         spaceBetween={20}
-        loop={true} // Only loop if enough slides, but true is generally safe
+        loop={data.length > 3} // Only loop if enough items
         pagination={{
           clickable: true,
           modifierClass: 'swiper-pagination-custom-',
@@ -140,12 +156,11 @@ function SeeAll() {
   }, []);
 
   // --- Group Data by Category ---
-  // Note: Adjust category strings ('adventure', 'spiritual', etc.) to match exactly what you save in backend (case-sensitive)
   const adventureData = allPackages.filter(pkg => pkg.packageCategory?.toLowerCase() === 'adventure');
   const spiritualData = allPackages.filter(pkg => pkg.packageCategory?.toLowerCase() === 'spiritual');
   const trekkingData = allPackages.filter(pkg => pkg.packageCategory?.toLowerCase() === 'trekking');
   
-  // Optional: Catch-all for others (e.g. 'luxury', 'beach') or add more sections
+  // Optional: Catch-all for others
   const otherData = allPackages.filter(pkg => !['adventure', 'spiritual', 'trekking'].includes(pkg.packageCategory?.toLowerCase()));
 
   return (
@@ -176,7 +191,7 @@ function SeeAll() {
                    {/* Render other categories if they exist */}
                    {otherData.length > 0 && (
                        <PackageSection 
-                          categoryTitle="More Experiences" 
+                          categoryTitle="More Experiences & Packages" 
                           data={otherData} 
                        />
                    )}
