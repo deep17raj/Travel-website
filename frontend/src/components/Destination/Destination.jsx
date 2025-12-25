@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper modules
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
-import Pic1 from "../../assets/Pic1.svg"; // Fallback image
+import Pic1 from "../../assets/Pic1.jpg"; // Fallback image
 import { handleCall } from '../../utils/contactHelper';
 
 // Import Swiper styles

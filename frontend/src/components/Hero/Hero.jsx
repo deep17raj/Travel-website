@@ -1,9 +1,9 @@
 import React from "react";
 // Ensure these paths match your project structure
-import Pic1 from "../../assets/Pic1.svg";
-import Pic2 from "../../assets/Pic2.svg";
-import Pic3 from "../../assets/Pic3.svg";
-import Pic4 from "../../assets/Pic4.svg";
+import Pic1 from "../../assets/Pic1.jpg";
+import Pic2 from "../../assets/Pic2.jpg";
+import Pic3 from "../../assets/Pic3.jpg";
+import Pic4 from "../../assets/Pic4.jpg";
 import Tel from "../../assets/Tel.svg";
 import Map from "../../assets/Maps.svg";
 import Plane1 from "../../assets/Plane1.svg";
