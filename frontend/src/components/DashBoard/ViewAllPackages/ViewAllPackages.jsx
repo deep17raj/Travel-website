@@ -3,11 +3,12 @@ import axios from 'axios';
 import PackageCard from './PackageCard';
 import { Search } from 'lucide-react';
 import.meta.env.VITE_API_URL
+import { useNavigate } from "react-router-dom";
 const ViewAllPackages = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-
+const navigate = useNavigate();
   // --- Fetch Data from Backend ---
   useEffect(() => {
     const fetchPackages = async () => {
@@ -23,7 +24,7 @@ const ViewAllPackages = () => {
         // Schema: packageName, imageUrl, displayText, _id
         // Component Expects: title, image, description, id
         const formattedData = rawData.map((pkg) => ({
-            id: pkg._id,
+            id: pkg.blogId,
             title: pkg.packageName,
             image: pkg.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image', // Fallback image
             description: pkg.displayText || 'No description available.'
@@ -43,6 +44,7 @@ const ViewAllPackages = () => {
   // Handle Manage Click
   const handleManage = (id) => {
     console.log(`Maps to edit page for package ID: ${id}`);
+    navigate(`/dashboard/update-package/${id}`)
     // navigation.navigate(`/admin/edit-package/${id}`);
   };
 

@@ -8,6 +8,7 @@ import DashLayout from './components/DashBoard/DashLayout/DashLayout.jsx'
 import HomePage from './components/HomePage/HomePage.jsx'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import UpdateGuide from './components/DashBoard/UpdateGuide/UpdateGuide.jsx'
+import UpdatePackageForm from './components/DashBoard/UpdatePackageForm/UpdatePackageForm.jsx'
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
           <Route path='/blog/:id' element={<Blog/>}/>
           <Route path='/dashboard' element={<DashLayout/>}/>
           <Route path="/dashboard/edit-guide/:id" element={<UpdateGuide/>} />
+          <Route path="/dashboard/update-package/:id" element={<UpdatePackageForm/>} />
           
         </Routes>
       </div>
