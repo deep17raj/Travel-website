@@ -61,9 +61,9 @@ function TestimonialText() {
 
       {/* Header */}
       <div className="flex flex-col justify-center items-center mb-12 text-center z-10">
-        <h4 className="text-[#317312] text-[20px] font-bold tracking-widest text-sm uppercase mb-2">
+        <h2 className="text-[#317312] text-[20px] font-bold tracking-widest text-sm uppercase mb-2">
           TESTIMONIALS
-        </h4>
+        </h2>
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 font-serif">
           Trust our clients
         </h2>
@@ -89,7 +89,7 @@ function TestimonialText() {
             </div>
 
             {/* Name & Role */}
-            <h6 className="text-xl font-bold text-gray-800">{currentData.name}</h6>
+            <h3 className="text-xl font-bold text-gray-800">{currentData.name}</h3>
             <p className="text-gray-500 text-sm mb-5">{currentData.role}</p>
 
             {/* Stars */}

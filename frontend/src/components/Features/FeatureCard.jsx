@@ -16,9 +16,9 @@ function FeatureCard({ Src, Title, Desc }) {
       </div>
 
       {/* Title */}
-      <h4 className="text-[#1C1C1C] text-xl font-bold mb-4">
+      <h3 className="text-[#1C1C1C] text-xl font-bold mb-4">
         {Title}
-      </h4>
+      </h3>
 
       {/* Description */}
       <p className="text-gray-500 text-[15px] leading-relaxed font-normal">

@@ -44,7 +44,7 @@ function KeyFeature() {
               </div>
               {/* Text */}
               <div className="flex flex-col">
-                <h4 className="text-[#1C1C1C] font-bold text-lg sm:text-xl">Select many location</h4>
+                <h3 className="text-[#1C1C1C] font-bold text-lg sm:text-xl">Select many location</h3>
                 <p className="text-[#A8A8A8] text-sm sm:text-base font-medium mt-1">
                   Choose your favorite location
                 </p>
@@ -59,7 +59,7 @@ function KeyFeature() {
               </div>
               {/* Text */}
               <div className="flex flex-col">
-                <h4 className="text-[#1C1C1C] font-bold text-lg sm:text-xl">Schedule your trip</h4>
+                <h3 className="text-[#1C1C1C] font-bold text-lg sm:text-xl">Schedule your trip</h3>
                 <p className="text-[#A8A8A8] text-sm sm:text-base font-medium mt-1">
                   Set the date you want
                 </p>
@@ -74,7 +74,7 @@ function KeyFeature() {
               </div>
               {/* Text */}
               <div className="flex flex-col">
-                <h4 className="text-[#1C1C1C] font-bold text-lg sm:text-xl">Big discount</h4>
+                <h3 className="text-[#1C1C1C] font-bold text-lg sm:text-xl">Big discount</h3>
                 <p className="text-[#A8A8A8] text-sm sm:text-base font-medium mt-1">
                   Get discount for every service
                 </p>

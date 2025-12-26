@@ -54,7 +54,7 @@ const VehicleCard = ({ vehicle }) => {
 
         {/* Title and Specs Overlay */}
         <div className="absolute bottom-5 left-5 text-white z-10">
-          <h3 className="text-2xl font-bold mb-1">{title}</h3>
+          <h2 className="text-2xl font-bold mb-1">{title}</h2>
           <div className="flex items-center text-sm font-medium opacity-90">
             {IconComponent && <IconComponent className="w-4 h-4 mr-1" />}
             <span>{specs.text}</span>

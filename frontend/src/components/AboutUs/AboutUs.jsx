@@ -34,7 +34,7 @@ function AboutUs() {
 
                 {/* Right Column: About Links */}
                 <div className="flex flex-col md:w-auto">
-                    <h4 className="text-xl font-bold text-black mb-6 md:mb-8">About</h4>
+                    <h2 className="text-xl font-bold text-black mb-6 md:mb-8">About</h2>
                     <div className="flex flex-col gap-4">
                         <a href="#" className="text-gray-400 text-lg hover:text-[#A020F0] transition-colors">Explore</a>
                         <a href="#" className="text-gray-400 text-lg hover:text-[#A020F0] transition-colors">Contact Us</a>

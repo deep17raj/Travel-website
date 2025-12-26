@@ -99,34 +99,34 @@ function Tp() {
               
               {/* Card 1 */}
               <div className="bg-white border border-[#1918251A] rounded-[2rem] p-6 flex flex-col items-center justify-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <h4 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
+                <h3 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
                   {/* Using the updated CountUp component */}
                   <CountUp end={200} suffix="+" />
-                </h4>
+                </h3>
                 <p className="text-[#1C1C1C] text-sm font-medium">Holiday Package</p>
               </div>
 
               {/* Card 2 */}
               <div className="bg-white border border-[#1918251A] rounded-[2rem] p-6 flex flex-col items-center justify-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <h4 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
+                <h3 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
                   <CountUp end={450} />
-                </h4>
+                </h3>
                 <p className="text-[#1C1C1C] text-sm font-medium">RedDoorz</p>
               </div>
 
               {/* Card 3 */}
               <div className="bg-white border border-[#1918251A] rounded-[2rem] p-6 flex flex-col items-center justify-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <h4 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
+                <h3 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
                   <CountUp end={10} />
-                </h4>
+                </h3>
                 <p className="text-[#1C1C1C] text-sm font-medium">Premium Airlines</p>
               </div>
 
               {/* Card 4 */}
               <div className="bg-white border border-[#1918251A] rounded-[2rem] p-6 flex flex-col items-center justify-center text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                <h4 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
+                <h3 className="text-[#317312] font-bold text-3xl lg:text-4xl mb-1">
                   <CountUp end={12} suffix="k+" />
-                </h4>
+                </h3>
                 <p className="text-[#1C1C1C] text-sm font-medium">Happy Customer</p>
               </div>
 

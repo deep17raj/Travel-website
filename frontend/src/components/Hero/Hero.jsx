@@ -36,9 +36,9 @@ function Hero() {
             <h1 className="text-[#1C1C1C] font-extrabold text-5xl sm:text-6xl lg:text-[4.5rem] tracking-tight">
               Travel with
             </h1>
-            <h1 className="text-[#317312] font-extrabold text-5xl sm:text-6xl lg:text-[4.5rem] tracking-tight">
+            <h2 className="text-[#317312] font-extrabold text-5xl sm:text-6xl lg:text-[4.5rem] tracking-tight">
               Complete Trust
-            </h1>
+            </h2>
           </div>
 
           {/* Description */}

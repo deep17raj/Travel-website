@@ -23,11 +23,13 @@ import UpdatePackageForm from './components/DashBoard/UpdatePackageForm/UpdatePa
 // --- Auth Imports ---
 import AdminLogin from './components/AdminLogin/AdminLogin.jsx';
 import ProtectedRoute from './components/DashBoard/ProtectedRoute/ProtectedRoute.jsx';
+import { HelmetProvider } from 'react-helmet-async';
 
 function App() {
 
   return (
     <>
+    <HelmetProvider>
     <BrowserRouter>
     <div className="relative w-full min-h-screen overflow-x-hidden">
       
@@ -78,6 +80,7 @@ function App() {
 
     </div>
     </BrowserRouter>
+    </HelmetProvider>
     </>
   )
 }
