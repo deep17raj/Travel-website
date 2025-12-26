@@ -11,17 +11,11 @@ import TestimonialText from "../TestimonialText/TestimonialText";
 import TestimonialVideo from "../TestimonialVideo/TestimonialVideo";
 import AboutUs from "../AboutUs/AboutUs";
 import VehicleRental from "../VehicleRental/VehicleRental";
-import SEO from "../Seo/Seo";
 function HomePage() {
   return (
     <div>
       <>
-      <SEO
-  title="Dehradun Tour & Travel Packages with Trusted Guides & Rentals | Satotra"
-  description="Explore Dehradun with trusted local guides, affordable tour packages, and reliable car rentals. Discover top places, adventures, and Uttarakhand experiences with Satotra."
-  keywords="Dehradun tour packages, trusted guides Dehradun, car rental in Dehradun, Uttarakhand tours, Dehradun sightseeing"
-  canonical="https://satotra.com/"
-/>
+      
         <NavBar />
         <Hero />
         <Reveal>
