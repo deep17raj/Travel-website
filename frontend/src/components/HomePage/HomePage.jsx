@@ -10,11 +10,13 @@ import KeyFeature from '../KeyFeature/KeyFeature'
 import TestimonialText from '../TestimonialText/TestimonialText'
 import TestimonialVideo from '../TestimonialVideo/TestimonialVideo'
 import AboutUs from '../AboutUs/AboutUs'
+import VehicleRental from '../VehicleRental/VehicleRental'
 function HomePage() {
   return (
     <div>
         <NavBar/>
           <Hero/>
+          <Reveal><VehicleRental/></Reveal>
           <Reveal>
             <Features/>
           </Reveal>

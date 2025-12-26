@@ -204,7 +204,7 @@ function SeeAll() {
                  Looking for something specific?
               </h3>
               <p className="text-gray-500 mb-8 max-w-lg mx-auto">We can customize any experience for you based on your preferences and dates.</p>
-              <button className="inline-block border-2 border-[#8B5CF6] text-[#8B5CF6] font-bold text-sm py-3 px-8 rounded-full hover:bg-[#8B5CF6] hover:text-white transition-all duration-300 tracking-wide uppercase">
+              <button onClick={() => handleCall('+971501234567')} className="inline-block border-2 border-[#8B5CF6] text-[#8B5CF6] font-bold text-sm py-3 px-8 rounded-full hover:bg-[#8B5CF6] hover:text-white transition-all duration-300 tracking-wide uppercase">
                  Request Custom Plan
               </button>
            </div>
