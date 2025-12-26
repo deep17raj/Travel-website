@@ -7,20 +7,28 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 // 3. Import required modules
 import { Navigation, Pagination } from 'swiper/modules';
-// 4. Import Lucide Icons
 
-// Import decorative dots (keep these if you have them, otherwise remove)
+// Import decorative assets
 import RightDown from "../../assets/Testimonial/RightDown.svg"; 
 import LeftTop from "../../assets/Testimonial/LeftTop.svg";
 import RightArrow from "../../assets/Testimonial/RightArrow.svg";
 import LeftArrow from "../../assets/Testimonial/LeftArrow.svg";
 
+// Import Videos
+import Vid1 from "../../assets/videos/Vid1.mp4"
+import Vid2 from "../../assets/videos/Vid2.mp4"
+import Vid3 from "../../assets/videos/Vid3.mp4"
+import Vid4 from "../../assets/videos/Vid4.mp4"
+
 function TestimonialVideo() {
   // State to control the swiper instance
   const [swiperRef, setSwiperRef] = useState(null);
 
+  // Array of videos for cleaner mapping
+  const videoList = [Vid1, Vid2, Vid3, Vid4];
+
   return (
-    <div className='relative w-full py-16 overflow-hidden '>
+    <div className='relative w-full py-16 overflow-hidden'>
       
       {/* --- Decorative Background Dots --- */}
       <div className="absolute top-0 left-0 -translate-x-4 translate-y-4 md:translate-x-0 md:translate-y-0 z-0">
@@ -48,9 +56,8 @@ function TestimonialVideo() {
                 </h2>
             </div>
 
-            {/* 3. Navigation Arrows (Lucide Icons) */}
+            {/* 3. Navigation Arrows */}
             <div className='flex justify-center md:justify-end gap-4 w-full md:w-1/3'>
-                {/* Prev Button */}
                 <button 
                     onClick={() => swiperRef?.slidePrev()}
                     className="w-12 h-12 rounded-full border border-blue-500 flex items-center justify-center text-blue-500 hover:bg-blue-50 transition-colors cursor-pointer"
@@ -59,7 +66,6 @@ function TestimonialVideo() {
                     <img src={LeftArrow} alt="" />
                 </button>
                 
-                {/* Next Button */}
                 <button 
                     onClick={() => swiperRef?.slideNext()}
                     className="w-12 h-12 rounded-full bg-blue-600 border border-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 cursor-pointer"
@@ -92,35 +98,23 @@ function TestimonialVideo() {
                 spaceBetween: 30,
               },
             }}
-            className="pb-10" // Padding for potential shadow clipping
+            className="pb-10"
           >
-            {/* Card 1 */}
-            <SwiperSlide>
-                <div className="h-[450px] bg-[#D9D9D9] rounded-[30px] w-full flex items-center justify-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
-                    <span className="text-gray-500 font-medium">Video Content 1</span>
+            {videoList.map((videoSrc, index) => (
+              <SwiperSlide key={index}>
+                <div className="h-[450px] bg-black rounded-[30px] w-full flex items-center justify-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02] shadow-md">
+                    <video 
+                        src={videoSrc}
+                        className="w-full h-full object-cover"
+                        muted       // Muted by default
+                            // Starts playing automatically
+                        loop        // Loops indefinitely
+                        playsInline // Better support for mobile browsers
+                        controls    // Adds controls so user can unmute
+                    />
                 </div>
-            </SwiperSlide>
-
-            {/* Card 2 */}
-            <SwiperSlide>
-                <div className="h-[450px] bg-[#D9D9D9] rounded-[30px] w-full flex items-center justify-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
-                    <span className="text-gray-500 font-medium">Video Content 2</span>
-                </div>
-            </SwiperSlide>
-
-            {/* Card 3 */}
-            <SwiperSlide>
-                <div className="h-[450px] bg-[#D9D9D9] rounded-[30px] w-full flex items-center justify-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
-                    <span className="text-gray-500 font-medium">Video Content 3</span>
-                </div>
-            </SwiperSlide>
-
-            {/* Card 4 */}
-            <SwiperSlide>
-                <div className="h-[450px] bg-[#D9D9D9] rounded-[30px] w-full flex items-center justify-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
-                    <span className="text-gray-500 font-medium">Video Content 4</span>
-                </div>
-            </SwiperSlide>
+              </SwiperSlide>
+            ))}
 
           </Swiper>
         </div>
@@ -129,4 +123,4 @@ function TestimonialVideo() {
   )
 }
 
-export default TestimonialVideo
+export default TestimonialVideo;
