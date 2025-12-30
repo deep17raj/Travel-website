@@ -43,8 +43,7 @@ function Hero() {
 
           {/* Description */}
           <p className="text-gray-500 text-base sm:text-lg leading-relaxed max-w-md">
-            Experience the UAE with certified, trustworthy guides. Pay directly to us, 
-            travel worry free. Your safety and satisfaction are our guarantee.
+            Travel worry-free with our trustworthy guides, dedicated to making every journey safe, seamless, and memorable. Your safety and satisfaction are always our promise.
           </p>
 
           {/* CTA Button */}

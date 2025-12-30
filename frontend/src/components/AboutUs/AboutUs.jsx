@@ -27,7 +27,7 @@ function AboutUs() {
                     {/* Description */}
                     <div className="max-w-sm">
                         <p className="text-gray-400 text-lg leading-relaxed">
-                            Travelo is Southeast Asia’s travel and lifestyle app, we provide you with access to discover and purchase different type of travel needs.
+                            Satotra is Southeast Asia’s travel and lifestyle app, we provide you with access to discover and purchase different type of travel needs.
                         </p>
                     </div>
                 </div>

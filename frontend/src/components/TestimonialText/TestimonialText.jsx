@@ -13,7 +13,7 @@ const testimonials = [
     name: "Irfan Rahmat",
     role: "Travel Enthusiast",
     image: Face,
-    text: "I love Travelo, this is the best place to buy ticket and help you find your dream holiday.",
+    text: "I love Satotra, this is the best place to buy ticket and help you find your dream holiday.",
     stars: 5,
   },
   {
@@ -29,7 +29,7 @@ const testimonials = [
     name: "Michael Chen",
     role: "Business Traveler",
     image: Face,
-    text: "Reliable and fast. I use Travelo for all my business trips now. Highly recommended!",
+    text: "Reliable and fast. I use Satotra for all my business trips now. Highly recommended!",
     stars: 4,
   },
 ];

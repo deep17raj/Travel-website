@@ -112,7 +112,7 @@ const VehicleRental = () => {
   ];
 
   return (
-    <section className="py-16 px-4 md:px-8 bg-orange-50/30 min-h-screen">
+    <section className="py-16 px-4 md:px-8 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto">
         <Header />
         {/* Card Grid - No carousel, just a static grid */}
