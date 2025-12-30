@@ -2,6 +2,7 @@ import React from 'react';
 import Facebook from "../../assets/AboutUs/Facebook.svg";
 import Twitter from "../../assets/AboutUs/Twitter.svg";
 import Insta from "../../assets/AboutUs/Instagram.svg";
+import Logo from "../../assets/Logo/Satotra.svg"
 
 function AboutUs() {
   return (
@@ -16,10 +17,8 @@ function AboutUs() {
                     {/* Logo Section */}
                     <div className="flex items-center gap-3 mb-6">
                         {/* CSS-only placeholder for the Suitcase Logo */}
-                        <div className="w-10 h-10 bg-[#A020F0] rounded-lg flex items-center justify-center relative">
-                            <div className="w-6 h-4 border-2 border-white rounded-sm mb-1"></div>
-                            <div className="absolute top-1 w-3 h-2 border-2 border-white border-b-0 rounded-t-full"></div>
-                            <div className="absolute w-1 h-1 bg-white rounded-full"></div>
+                        <div className="w-10 h-10  rounded-lg flex items-center justify-center relative">
+                            <img src={Logo} alt="logo" />
                         </div>
                         <h2 className="text-2xl font-bold text-black tracking-tight">Satotra</h2>
                     </div>
@@ -27,7 +26,7 @@ function AboutUs() {
                     {/* Description */}
                     <div className="max-w-sm">
                         <p className="text-gray-400 text-lg leading-relaxed">
-                            Satotra is Southeast Asia’s travel and lifestyle app, we provide you with access to discover and purchase different type of travel needs.
+                            Satotra is India’s travel and lifestyle app for discovering and booking all your travel needs in one place.
                         </p>
                     </div>
                 </div>

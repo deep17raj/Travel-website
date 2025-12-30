@@ -25,7 +25,7 @@ function KeyFeature() {
             </h2>
             <div className="mt-4 space-y-1">
               <p className="text-[#A8A8A8] text-base sm:text-lg font-medium">
-                Hay! Travelo there to help you find your dream holiday.
+                Hay! Satotra there to help you find your dream holiday.
               </p>
               <p className="text-[#A8A8A8] text-base sm:text-lg font-medium">
                 Easy you just find where you want to go and buy the ticket.
